@@ -60,6 +60,7 @@ export default function Sample() {
   }
 
   function onDocumentLoadSuccess({ numPages: nextNumPages }: PDFDocumentProxy): void {
+    console.log("next num pagesss", nextNumPages)
     setNumPages(nextNumPages);
   }
 
@@ -70,20 +71,28 @@ export default function Sample() {
       display: "grid",
       placeItems: "center",
     }}>
-      <Script src="/pdfjs/pdf.mjs" type="module" />
       <div style={{
-        width: "fit-content",
-        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-        margin: "5rem 0"
+        margin: "5rem auto"
       }}>
         <Document file={file} onLoadSuccess={onDocumentLoadSuccess} options={options}>
-          {Array.from(new Array(numPages), (_el, index) => (
-            <Page
-              key={`page_${index + 1}`}
-              pageNumber={index + 1}
-              width={containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth}
-            />
-          ))}
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 16
+          }}>
+            {Array.from(new Array(numPages), (_el, index) => (
+              <div style={{
+                width: "fit-content",
+                boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+              }}>
+                <Page
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                  width={containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth}
+                />
+              </div>
+            ))}
+          </div>
         </Document>
       </div>
     </div>

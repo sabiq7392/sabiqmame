@@ -1,0 +1,12 @@
+{
+  "eslint.useFlatConfig": true,
+  "eslint.trace.server": "off",
+  "eslint.format.enable": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "editor.indentSize": "tabSize",
+  "editor.tabSize": 2
+}
