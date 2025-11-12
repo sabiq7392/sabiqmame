@@ -74,8 +74,7 @@ export default function Gallery() {
         {images.map((image) => (
           <div
             key={image.id}
-            className="relative group cursor-pointer overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800 mb-2 break-inside-avoid"
-            style={{ minHeight: '200px' }}
+            className="relative group cursor-pointer overflow-hidden rounded-lg mb-2 break-inside-avoid"
           >
             <Image
               src={image.url}
@@ -86,7 +85,7 @@ export default function Gallery() {
                 display: 'block',
                 width: '100%',
                 height: 'auto',
-                minHeight: '200px'
+                verticalAlign: 'bottom'
               }}
               preview={{
                 mask: (
@@ -98,6 +97,7 @@ export default function Gallery() {
                 ),
               }}
               loading="lazy"
+              rootClassName="!block"
             />
           </div>
         ))}
