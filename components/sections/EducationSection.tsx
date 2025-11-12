@@ -10,7 +10,7 @@ export default function EducationSection() {
 
   return (
     <section className="w-full fade-in">
-      <Card className="rounded-[20px] p-8 md:p-6 glass-strong">
+      <div className="rounded-[20px] p-8 md:p-6 glass-strong shadow-md">
         <Title level={2} className="!m-0 text-gray-900 dark:text-white text-3xl md:text-2xl font-semibold">Education & Organization</Title>
         <Divider className="!border-gray-200 dark:!border-white/10 !my-6" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -47,7 +47,7 @@ export default function EducationSection() {
             </Text>
           </div>
         </div>
-      </Card>
+      </div>
     </section>
   )
 }

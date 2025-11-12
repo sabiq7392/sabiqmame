@@ -11,7 +11,7 @@ export default function ExperienceSection() {
 
   return (
     <section className="w-full fade-in">
-      <Card className="rounded-[20px] p-8 md:p-6 glass-strong">
+      <div className="rounded-[20px] p-8 md:p-6 glass-strong shadow-md">
         <Title level={2} className="!m-0 text-gray-900 dark:text-white text-3xl md:text-2xl font-semibold mb-6">
           Experience
         </Title>
@@ -96,10 +96,15 @@ export default function ExperienceSection() {
                           {/* Skills */}
                           {role.skills && role.skills.length > 0 && (
                             <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/10">
-                              <Text className="text-xs text-gray-500 dark:text-white/60">
+                              {/* <Text className="text-xs text-gray-500 dark:text-white/60">
                                 {role.skills.join(', ')}
                                 {role.skills.length > 2 && ' dan +' + (role.skills.length - 2) + ' keahlian'}
-                              </Text>
+                              </Text> */}
+                              {role.skills.map((skill, skillIndex) => (
+                                <Tag color="green" className="text-xs px-2 py-0.5 border-primary-blue/50 bg-primary-blue/10 text-primary-blue-light" key={skillIndex}>
+                                  {skill}
+                                </Tag>
+                              ))}
                             </div>
                           )}
                         </div>
@@ -111,7 +116,7 @@ export default function ExperienceSection() {
             </Timeline.Item>
           ))}
         </Timeline>
-      </Card>
+      </div>
     </section>
   )
 }
