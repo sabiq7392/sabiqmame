@@ -3,6 +3,7 @@
 import { Card, Typography, Divider, Tag, Timeline } from 'antd'
 import { CalendarOutlined, EnvironmentOutlined, TeamOutlined } from '@ant-design/icons'
 import { homeData } from '@/data/home.data'
+import { calculateDuration, calculateExperienceDuration } from '@/utils/date-utils'
 
 const { Title, Text } = Typography
 
@@ -41,7 +42,7 @@ export default function ExperienceSection() {
                       {experience.employmentType}
                     </Tag>
                     <Text className="text-gray-500 dark:text-white/60 text-sm">
-                      {experience.duration}
+                      {calculateExperienceDuration(experience.roles)}
                     </Text>
                   </div>
                 </div>
@@ -69,9 +70,7 @@ export default function ExperienceSection() {
                               <span className="flex items-center gap-1">
                                 <CalendarOutlined /> {role.period}
                               </span>
-                              {role.duration && (
-                                <span>· {role.duration}</span>
-                              )}
+                              <span>· {calculateDuration(role.period)}</span>
                               {role.location && (
                                 <span className="flex items-center gap-1">
                                   <EnvironmentOutlined /> {role.location}

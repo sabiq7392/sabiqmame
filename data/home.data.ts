@@ -74,7 +74,6 @@ export interface ExperienceRole {
 export interface ExperienceData {
   company: string
   employmentType: string
-  duration: string
   roles: ExperienceRole[]
 }
 
@@ -215,12 +214,10 @@ export const homeData: HomeData = {
     {
       company: 'Quantum Teknologi (Nusantara)',
       employmentType: 'Purnawaktu',
-      duration: '3 thn 11 bln',
       roles: [
         {
           title: 'Full Stack Engineer at National Certificate Management Project',
           period: 'Okt 2024 - Saat ini',
-          duration: '1 thn 2 bln',
           location: 'Jakarta, Indonesia',
           type: 'Di lokasi',
           achievements: [
@@ -237,7 +234,6 @@ export const homeData: HomeData = {
         {
           title: 'Full Stack Engineer at Kenangan E-Commerce Project',
           period: 'Jan 2022 - Saat ini',
-          duration: '3 thn 11 bln',
           type: 'Gabungan',
           achievements: [
             'Implemented a comprehensive product purchasing system, streamlining the customer experience',
@@ -257,7 +253,6 @@ export const homeData: HomeData = {
         {
           title: 'Full Stack Engineer at Police Integration Service Application Project',
           period: 'Jan 2023 - Okt 2025',
-          duration: '2 thn 10 bln',
           location: 'Jakarta Raya, Indonesia',
           type: 'Di lokasi',
           isCoreTeam: true,
@@ -274,12 +269,10 @@ export const homeData: HomeData = {
     {
       company: 'GDSC : STT Terpadu Nurul Fikri',
       employmentType: 'Frontend Lead',
-      duration: '9 bln',
       roles: [
         {
           title: 'Frontend Lead',
           period: 'Des 2022 - Agu 2023',
-          duration: '9 bln',
           achievements: [
             'Bootcamp Mentor GDSC Upskill Academy',
             'Speaker Workshop Frontend Intermediate',
@@ -291,12 +284,10 @@ export const homeData: HomeData = {
     {
       company: 'Sekolah Tinggi Teknologi Terpadu Nurul Fikri',
       employmentType: 'Assistant Lecturer of Web Programming',
-      duration: '6 bln',
       roles: [
         {
           title: 'Assistant Lecturer of Web Programming',
           period: 'Okt 2021 - Mar 2022',
-          duration: '6 bln',
           location: 'Jakarta Selatan, Jakarta Raya, Indonesia',
           achievements: [
             'Teach Frontend Development using JavaScript, CSS, Bootstrap Framework',
