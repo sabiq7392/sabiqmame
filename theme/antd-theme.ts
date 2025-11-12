@@ -22,7 +22,7 @@ export const getAntdTheme = (mode: 'light' | 'dark'): ThemeConfig => {
         itemActiveBg: isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)',
         itemHoverBg: isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.08)',
         colorText: isDark ? 'rgba(255, 255, 255, 0.9)' : 'rgba(17, 24, 39, 0.8)',
-        colorTextSelected: '#60a5fa',
+        // colorTextSelected: '#60a5fa',
         borderRadius: 8,
       },
       Button: {
