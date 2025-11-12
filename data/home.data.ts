@@ -91,8 +91,8 @@ export interface HomeData {
 export const homeData: HomeData = {
   hero: {
     name: 'Sabiq Muhammad Antebing Mame',
-    title: 'Full-Stack Developer',
-    description: 'Full-Stack Developer with expertise in website and backend development, specializing in building efficient, scalable, and well-structured systems. Skilled in database management, ensuring data integrity, and maintaining strict validation. Proficient in optimizing system performance and implementing seamless user experiences.',
+    title: 'Full-Stack Engineer',
+    description: 'Full-Stack Engineer with expertise in website and backend development, specializing in building efficient, scalable, and well-structured systems. Skilled in database management, ensuring data integrity, and maintaining strict validation. Proficient in optimizing system performance and implementing seamless user experiences.',
     avatar: '/me/me.jpg',
     cvUrl: '/me/cv.pdf',
     email: 'sabiqmuhammad98@gmail.com',
@@ -106,7 +106,7 @@ export const homeData: HomeData = {
   },
   about: {
     paragraphs: [
-      "I'm a Full-Stack Developer with expertise in website and backend development, specializing in building efficient, scalable, and well-structured systems. I'm skilled in database management, ensuring data integrity, eliminating duplication, and maintaining strict validation.",
+      "I'm a Full-Stack Engineer with expertise in website and backend development, specializing in building efficient, scalable, and well-structured systems. I'm skilled in database management, ensuring data integrity, eliminating duplication, and maintaining strict validation.",
       "I'm proficient in optimizing system performance, implementing seamless user experiences, and integrating logging mechanisms for effective monitoring and issue resolution. I'm dedicated to developing secure, high-performance applications that align with business and user needs.",
       "Currently working at <strong>PT. Quantum Teknologi Nusantara</strong> since January 2022, where I've developed various web-based systems and mobile applications for government and commercial clients.",
     ],

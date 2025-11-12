@@ -7,8 +7,53 @@ import ThemeWrapper from '@/components/ThemeWrapper'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Sabiq Muhammad Antebing Mame | Full-Stack Developer',
-  description: 'Full-Stack Developer with expertise in website and backend development. Specializing in building efficient, scalable, and well-structured systems. Currently working at PT. Quantum Teknologi Nusantara.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sabiq.pro'),
+  title: {
+    default: 'Sabiq Mame | Full-Stack Engineer',
+    template: '%s | Sabiq Mame'
+  },
+  description: 'Full-Stack Engineer with expertise in website and backend development. Specializing in building efficient, scalable, and well-structured systems. Currently working at PT. Quantum Teknologi Nusantara.',
+  keywords: ['Full-Stack Engineer', 'Web Developer', 'Backend Developer', 'Frontend Developer', 'React', 'Next.js', 'TypeScript', 'Node.js', 'Portfolio'],
+  authors: [{ name: 'Sabiq Mame' }],
+  creator: 'Sabiq Mame',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: '/',
+    siteName: 'Sabiq Mame',
+    title: 'Sabiq Mame | Full-Stack Engineer',
+    description: 'Full-Stack Engineer with expertise in website and backend development. Specializing in building efficient, scalable, and well-structured systems.',
+    images: [
+      {
+        url: '/me/me.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Sabiq Mame',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sabiq Mame | Full-Stack Engineer',
+    description: 'Full-Stack Engineer with expertise in website and backend development.',
+    images: ['/me/me.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // Add your verification codes here if needed
+    // google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
+  },
 }
 
 export default function RootLayout({
@@ -20,6 +65,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/me/logo.svg" />
+        <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'https://sabiq.pro'} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#3b82f6" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

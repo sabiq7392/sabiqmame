@@ -17,7 +17,7 @@ export default function ProfileSection() {
         <TextArea
           rows={5}
           className="bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
-          placeholder="Full-Stack Developer with expertise in website and backend development..."
+          placeholder="Full-Stack Engineer with expertise in website and backend development..."
         />
       </Form.Item>
     </div>
