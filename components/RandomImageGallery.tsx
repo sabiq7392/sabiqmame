@@ -4,22 +4,23 @@ import { useState, useEffect } from 'react'
 import { Spin, Image } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
-interface GalleryImage {
+interface RandomImageGalleryProps {
   id: number
   url: string
   width: number
   height: number
 }
 
-export default function Gallery() {
-  const [images, setImages] = useState<GalleryImage[]>([])
+export function RandomImageGallery() {
+  const [images, setImages] = useState<RandomImageGalleryProps[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
 
   useEffect(() => {
-    fetchImages()
+    fetchInitialImages()
   }, [])
 
-  const fetchImages = async () => {
+  const fetchInitialImages = async () => {
     setLoading(true)
     try {
       // Using Picsum Photos API - random images
@@ -44,6 +45,33 @@ export default function Gallery() {
     }
   }
 
+  const loadMoreImages = async () => {
+    setLoadingMore(true)
+    try {
+      // Using Picsum Photos API - random images
+      const imagePromises = Array.from({ length: 20 }, (_, i) => {
+        const id = Math.floor(Math.random() * 1000) + 1
+        const width = 300 + Math.floor(Math.random() * 200) // Random width between 300-500
+        const height = 400 + Math.floor(Math.random() * 300) // Random height between 400-700
+        // Generate unique ID by combining timestamp with index
+        const uniqueId = Date.now() + i
+        return {
+          id: uniqueId,
+          url: `https://picsum.photos/id/${id}/${width}/${height}`,
+          width,
+          height,
+        }
+      })
+
+      const fetchedImages = await Promise.all(imagePromises)
+      setImages((prevImages) => [...prevImages, ...fetchedImages])
+    } catch (error) {
+      console.error('Error fetching more images:', error)
+    } finally {
+      setLoadingMore(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -56,7 +84,7 @@ export default function Gallery() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-          Just Gallery
+          Random Images
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
           Collection of beautiful random images
@@ -106,10 +134,17 @@ export default function Gallery() {
       {/* Load More Button */}
       <div className="mt-8 flex justify-center">
         <button
-          onClick={fetchImages}
-          className="px-6 py-3 rounded-xl bg-primary-blue/20 hover:bg-primary-blue/30 dark:bg-primary-blue/30 dark:hover:bg-primary-blue/40 text-primary-blue-light dark:text-primary-blue-light font-medium transition-all duration-300"
+          onClick={loadMoreImages}
+          disabled={loadingMore}
+          className="px-6 py-3 rounded-xl bg-primary-blue/20 hover:bg-primary-blue/30 dark:bg-primary-blue/30 dark:hover:bg-primary-blue/40 text-primary-blue-light dark:text-primary-blue-light font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Load More Images
+          {loadingMore ? (
+            <span className="flex items-center gap-2">
+              <LoadingOutlined spin /> Loading...
+            </span>
+          ) : (
+            'Load More Images'
+          )}
         </button>
       </div>
     </div>

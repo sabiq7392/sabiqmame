@@ -1,12 +1,12 @@
 import Navbar from '@/components/Navbar'
-import Gallery from '@/components/Gallery'
+import { RandomImageGallery } from '@/components/RandomImageGallery'
 
-export default function GalleryPage() {
+export default function RandomImagePage() {
   return (
     <main className="min-h-screen w-full relative pt-24">
       <Navbar />
       <div className="w-full min-h-[calc(100vh-96px)] p-4 md:p-8">
-        <Gallery />
+        <RandomImageGallery />
       </div>
     </main>
   )
