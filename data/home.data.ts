@@ -60,6 +60,24 @@ export interface OrganizationData {
   activities: string[]
 }
 
+export interface ExperienceRole {
+  title: string
+  period: string
+  duration?: string
+  location?: string
+  type?: string
+  achievements: string[]
+  skills?: string[]
+  isCoreTeam?: boolean
+}
+
+export interface ExperienceData {
+  company: string
+  employmentType: string
+  duration: string
+  roles: ExperienceRole[]
+}
+
 export interface HomeData {
   hero: HeroData
   about: AboutData
@@ -67,6 +85,7 @@ export interface HomeData {
   projects: ProjectData[]
   education: EducationData
   organization: OrganizationData
+  experiences: ExperienceData[]
 }
 
 export const homeData: HomeData = {
@@ -192,4 +211,99 @@ export const homeData: HomeData = {
       'Speaker for Frontend Intermediate Workshop',
     ],
   },
+  experiences: [
+    {
+      company: 'Quantum Teknologi (Nusantara)',
+      employmentType: 'Purnawaktu',
+      duration: '3 thn 11 bln',
+      roles: [
+        {
+          title: 'Full Stack Engineer at National Certificate Management Project',
+          period: 'Okt 2024 - Saat ini',
+          duration: '1 thn 2 bln',
+          location: 'Jakarta, Indonesia',
+          type: 'Di lokasi',
+          achievements: [
+            'Developed a centralized logging system for all services, storing structured logs in Elasticsearch for monitoring and issue tracking.',
+            'Deployed staging and production environments using Docker, ensuring isolated containers for backend services, MySQL, and Elasticsearch without version conflicts.',
+            'Integrated payment features for certification applications, including invoice generation and payment proof uploads.',
+            'Developed automated certification generation, producing official PDF certificates upon approval.',
+            'Designed and implemented reporting features, displaying data in charts and tables with export options to PDF & XLSX.',
+            'Implemented notifications to keep users updated on application status, payments, and certificate issuance.',
+            'Implemented cron jobs for automated database backups on Ubuntu servers',
+          ],
+          skills: ['Back-End Web Development', 'Front-end Development'],
+        },
+        {
+          title: 'Full Stack Engineer at Kenangan E-Commerce Project',
+          period: 'Jan 2022 - Saat ini',
+          duration: '3 thn 11 bln',
+          type: 'Gabungan',
+          achievements: [
+            'Implemented a comprehensive product purchasing system, streamlining the customer experience',
+            'Designed and deployed functionality for reporting inappropriate comments on videos',
+            'Developed user reporting mechanisms to enhance platform safety',
+            'Created a robust user-blocking feature to ensure a secure environment',
+            'Integrated advanced camera functionality with custom filters for enhanced user engagement',
+            'Built an admin dashboard with detailed analytics to support data-driven decision-making',
+            'Developed a merchant and shop management system for streamlined e-commerce operations',
+            'Engineered a product management system for efficient catalog management',
+            'Designed a customizable mobile application homepage tailored to individual user preferences',
+            'Developed a dynamic content management system for articles',
+            'Created a responsive and user-friendly landing page (https://kenangan.com)',
+          ],
+          skills: ['Back-End Web Development', 'Front-end Development'],
+        },
+        {
+          title: 'Full Stack Engineer at Police Integration Service Application Project',
+          period: 'Jan 2023 - Okt 2025',
+          duration: '2 thn 10 bln',
+          location: 'Jakarta Raya, Indonesia',
+          type: 'Di lokasi',
+          isCoreTeam: true,
+          achievements: [
+            'Developed an interactive dashboard to monitor and manage service integration in real-time',
+            'Built a mobile application that enables quick and easy access to various public services',
+            'Developed a landing page website designed to promote and provide information about the services',
+            'Developed the web version of the mobile application to ensure broad accessibility for users across various devices',
+          ],
+          skills: ['Back-End Web Development', 'Front-end Development'],
+        },
+      ],
+    },
+    {
+      company: 'GDSC : STT Terpadu Nurul Fikri',
+      employmentType: 'Frontend Lead',
+      duration: '9 bln',
+      roles: [
+        {
+          title: 'Frontend Lead',
+          period: 'Des 2022 - Agu 2023',
+          duration: '9 bln',
+          achievements: [
+            'Bootcamp Mentor GDSC Upskill Academy',
+            'Speaker Workshop Frontend Intermediate',
+          ],
+          skills: ['HTML', 'Teaching'],
+        },
+      ],
+    },
+    {
+      company: 'Sekolah Tinggi Teknologi Terpadu Nurul Fikri',
+      employmentType: 'Assistant Lecturer of Web Programming',
+      duration: '6 bln',
+      roles: [
+        {
+          title: 'Assistant Lecturer of Web Programming',
+          period: 'Okt 2021 - Mar 2022',
+          duration: '6 bln',
+          location: 'Jakarta Selatan, Jakarta Raya, Indonesia',
+          achievements: [
+            'Teach Frontend Development using JavaScript, CSS, Bootstrap Framework',
+            'Provide assessments and check assignments to students',
+          ],
+        },
+      ],
+    },
+  ],
 }
