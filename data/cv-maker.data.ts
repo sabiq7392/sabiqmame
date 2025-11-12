@@ -21,7 +21,7 @@ export interface CVProject {
   company: string
   period: string
   description: string
-  achievements: string[]
+  achievements: string[] | string
   availableOn?: string
 }
 
@@ -36,7 +36,7 @@ export interface CVOrganization {
   name: string
   institution: string
   period: string
-  activities: string[]
+  activities: string[] | string
 }
 
 export const defaultCVData: CVData = {

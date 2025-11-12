@@ -111,92 +111,92 @@ export default function DraggableCVPreview({
       profile: cvData.profile ? `## PROFILE\n\n${cvData.profile}\n\n` : '',
       projects: cvData.projects.length > 0
         ? (() => {
-            let markdown = `## PROJECTS\n\n`
-            const companyProjects = cvData.projects.reduce((acc, project) => {
-              if (!acc[project.company]) {
-                acc[project.company] = []
+          let markdown = `## PROJECTS\n\n`
+          const companyProjects = cvData.projects.reduce((acc, project) => {
+            if (!acc[project.company]) {
+              acc[project.company] = []
+            }
+            acc[project.company].push(project)
+            return acc
+          }, {} as Record<string, typeof cvData.projects>)
+
+          Object.entries(companyProjects).forEach(([company, projects]) => {
+            const firstProject = projects[0]
+            markdown += `**${company}** | *${firstProject.period}*\n\n`
+
+            projects.forEach((project, index) => {
+              markdown += `### ${index + 1}. ${project.title}\n\n`
+              markdown += `${project.description}\n\n`
+
+              if (project.achievements && project.achievements.length > 0) {
+                const achievements = Array.isArray(project.achievements)
+                  ? project.achievements
+                  : typeof project.achievements === 'string'
+                    ? project.achievements.split('\n').filter((line) => line.trim())
+                    : []
+
+                achievements.forEach((achievement) => {
+                  const trimmed = achievement.trim()
+                  if (trimmed) {
+                    markdown += `- ${trimmed}\n`
+                  }
+                })
+                markdown += `\n`
               }
-              acc[project.company].push(project)
-              return acc
-            }, {} as Record<string, typeof cvData.projects>)
 
-            Object.entries(companyProjects).forEach(([company, projects]) => {
-              const firstProject = projects[0]
-              markdown += `**${company}** | *${firstProject.period}*\n\n`
-
-              projects.forEach((project, index) => {
-                markdown += `### ${index + 1}. ${project.title}\n\n`
-                markdown += `${project.description}\n\n`
-
-                if (project.achievements && project.achievements.length > 0) {
-                  const achievements = Array.isArray(project.achievements)
-                    ? project.achievements
-                    : typeof project.achievements === 'string'
-                      ? project.achievements.split('\n').filter((line) => line.trim())
-                      : []
-
-                  achievements.forEach((achievement) => {
-                    const trimmed = achievement.trim()
-                    if (trimmed) {
-                      markdown += `- ${trimmed}\n`
-                    }
-                  })
-                  markdown += `\n`
-                }
-
-                if (project.availableOn) {
-                  markdown += `*${project.availableOn}*\n\n`
-                }
-              })
+              if (project.availableOn) {
+                markdown += `*${project.availableOn}*\n\n`
+              }
             })
-            return markdown
-          })()
+          })
+          return markdown
+        })()
         : '',
       education: cvData.education.degree
         ? `## EDUCATION\n\n**${cvData.education.degree}**\n*${cvData.education.period}*\n\n${cvData.education.institution}\n${cvData.education.location}\n\n`
         : '',
       organization: cvData.organization.name
         ? (() => {
-            let markdown = `## ORGANIZATION EXPERIENCE\n\n`
-            markdown += `**${cvData.organization.name}** | *${cvData.organization.period}*\n`
-            markdown += `${cvData.organization.institution}\n\n`
+          let markdown = `## ORGANIZATION EXPERIENCE\n\n`
+          markdown += `**${cvData.organization.name}** | *${cvData.organization.period}*\n`
+          markdown += `${cvData.organization.institution}\n\n`
 
-            const activities = Array.isArray(cvData.organization.activities)
-              ? cvData.organization.activities
-              : typeof cvData.organization.activities === 'string'
-                ? cvData.organization.activities.split('\n').filter((line) => line.trim())
-                : []
+          const activities = Array.isArray(cvData.organization.activities)
+            ? cvData.organization.activities
+            : typeof cvData.organization.activities === 'string'
+              ? cvData.organization.activities.split('\n').filter((line) => line.trim())
+              : []
 
-            activities.forEach((activity) => {
-              const trimmed = activity.trim()
-              if (trimmed) {
-                markdown += `- ${trimmed}\n`
-              }
-            })
-            markdown += `\n`
-            return markdown
-          })()
+          activities.forEach((activity) => {
+            const trimmed = activity.trim()
+            if (trimmed) {
+              markdown += `- ${trimmed}\n`
+            }
+          })
+          markdown += `\n`
+          return markdown
+        })()
         : '',
       skills:
         cvData.skills.programming.length > 0 ||
-        cvData.skills.database.length > 0 ||
-        cvData.skills.others.length > 0
+          cvData.skills.database.length > 0 ||
+          cvData.skills.others.length > 0
           ? (() => {
-              let markdown = `## ADDITIONAL EXPERIENCE\n\n`
-              if (cvData.skills.programming.length > 0) {
-                markdown += `### Programming Language\n`
-                markdown += `Experienced in using ${cvData.skills.programming.join(', ')}\n\n`
-              }
-              if (cvData.skills.database.length > 0) {
-                markdown += `### Database\n`
-                markdown += `Experienced in using ${cvData.skills.database.join(', ')}\n\n`
-              }
-              if (cvData.skills.others.length > 0) {
-                markdown += `### Others\n`
-                markdown += `Experienced in using ${cvData.skills.others.join(', ')}\n\n`
-              }
-              return markdown
-            })()
+            let markdown = `## ADDITIONAL EXPERIENCE\n\n`
+            if (cvData.skills.programming.length > 0) {
+              markdown += `### Programming Language\n`
+              markdown += `Experienced in using ${cvData.skills.programming.join(', ')}\n\n`
+            }
+            if (cvData.skills.database.length > 0) {
+              markdown += `### Database\n`
+              markdown += `Experienced in using ${cvData.skills.database.join(', ')}\n\n`
+            }
+            if (cvData.skills.others.length > 0) {
+              markdown += `### Others\n`
+              markdown += `Experienced in using ${cvData.skills.others.join(', ')}\n\n`
+            }
+            return markdown
+          })()
           : '',
     }
 
