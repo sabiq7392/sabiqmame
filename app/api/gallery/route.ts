@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { readdir } from 'fs/promises'
 import { join } from 'path'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   try {
     // Get folder parameter from query string
