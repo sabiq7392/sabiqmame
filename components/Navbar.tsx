@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, Button } from 'antd'
-import { HomeOutlined, ToolOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons'
+import { HomeOutlined, ToolOutlined, SunOutlined, MoonOutlined, AppstoreOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -17,6 +17,11 @@ const menuItems = [
     icon: <ToolOutlined />,
     label: <Link href="/tools">My Tools</Link>,
   },
+  {
+    key: '/gallery',
+    icon: <AppstoreOutlined />,
+    label: <Link href="/gallery">Just Gallery</Link>,
+  },
 ]
 
 export default function Navbar() {
@@ -31,9 +36,9 @@ export default function Navbar() {
             {/* Logo Section */}
             <div className="flex items-center gap-3 flex-shrink-0">
               <div className="w-10 h-10 md:w-9 md:h-9 flex items-center justify-center rounded-full overflow-hidden bg-gray-200 dark:bg-white/10 border border-gray-300 dark:border-white/20">
-                <img 
-                  src="/me/logo.svg" 
-                  alt="Logo" 
+                <img
+                  src="/me/logo.svg"
+                  alt="Logo"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -50,7 +55,7 @@ export default function Navbar() {
                 items={menuItems}
                 className="!bg-transparent !border-none [&_.ant-menu-horizontal]:!border-none [&_.ant-menu-item]:!mx-1 [&_.ant-menu-item]:!rounded-xl [&_.ant-menu-item]:!px-5 [&_.ant-menu-item]:!h-10 [&_.ant-menu-item]:!flex [&_.ant-menu-item]:!items-center [&_.ant-menu-item-selected]:!bg-primary-blue/30 [&_.ant-menu-item-selected]:!text-primary-blue-light [&_.ant-menu-item-selected]:!border-none [&_.ant-menu-item-selected>a]:!text-primary-blue-light [&_.ant-menu-item]:!text-gray-700 dark:[&_.ant-menu-item]:!text-white/70 [&_.ant-menu-item>a]:!text-gray-700 dark:[&_.ant-menu-item>a]:!text-white/70 [&_.ant-menu-item:hover]:!bg-primary-blue/20 [&_.ant-menu-item:hover]:!text-gray-900 dark:[&_.ant-menu-item:hover]:!text-white [&_.ant-menu-item:hover>a]:!text-gray-900 dark:[&_.ant-menu-item:hover>a]:!text-white [&_.ant-menu-item]:!transition-all [&_.ant-menu-item]:!duration-300"
               />
-              
+
               {/* Theme Toggle Button */}
               <Button
                 type="text"

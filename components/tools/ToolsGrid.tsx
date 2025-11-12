@@ -42,6 +42,13 @@ const tools: Tool[] = [
     icon: <CodeOutlined />,
     href: '/tools/json-beautifier',
   },
+  {
+    id: 'random-image',
+    name: 'Random Image',
+    description: 'Get a random image from the internet',
+    icon: <FileImageOutlined />,
+    href: '/tools/random-image',
+  }
 ]
 
 export default function ToolsGrid() {
@@ -62,20 +69,20 @@ export default function ToolsGrid() {
             <Card
               className="rounded-2xl glass hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-blue/20 transition-all cursor-pointer group h-full"
             >
-            <div className="flex flex-col items-center text-center p-6">
-              <div className="w-20 h-20 rounded-full bg-primary-blue/20 border border-primary-blue/50 flex items-center justify-center mb-4 group-hover:bg-primary-blue/30 group-hover:border-primary-blue transition-all">
-                <span className="text-4xl text-primary-blue-light">
-                  {tool.icon}
-                </span>
+              <div className="flex flex-col items-center text-center p-6">
+                <div className="w-20 h-20 rounded-full bg-primary-blue/20 border border-primary-blue/50 flex items-center justify-center mb-4 group-hover:bg-primary-blue/30 group-hover:border-primary-blue transition-all">
+                  <span className="text-4xl text-primary-blue-light">
+                    {tool.icon}
+                  </span>
+                </div>
+                <Title level={3} className="!m-0 !mb-2 text-gray-900 dark:text-white text-2xl font-semibold">
+                  {tool.name}
+                </Title>
+                <p className="text-gray-600 dark:text-white/70 text-base leading-relaxed mb-0">
+                  {tool.description}
+                </p>
               </div>
-              <Title level={3} className="!m-0 !mb-2 text-gray-900 dark:text-white text-2xl font-semibold">
-                {tool.name}
-              </Title>
-              <p className="text-gray-600 dark:text-white/70 text-base leading-relaxed mb-0">
-                {tool.description}
-              </p>
-            </div>
-          </Card>
+            </Card>
           </Link>
         ))}
       </div>
