@@ -66,8 +66,8 @@ export default function ToolsGrid() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
         {tools.map((tool) => (
           <Link key={tool.id} href={tool.href || '#'}>
-            <Card
-              className="rounded-2xl glass hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-blue/20 transition-all cursor-pointer group h-full"
+            <div
+              className="rounded-2xl glass-strong hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-blue/20 transition-all cursor-pointer group h-full"
             >
               <div className="flex flex-col items-center text-center p-6">
                 <div className="w-20 h-20 rounded-full bg-primary-blue/20 border border-primary-blue/50 flex items-center justify-center mb-4 group-hover:bg-primary-blue/30 group-hover:border-primary-blue transition-all">
@@ -82,7 +82,7 @@ export default function ToolsGrid() {
                   {tool.description}
                 </p>
               </div>
-            </Card>
+            </div>
           </Link>
         ))}
       </div>
