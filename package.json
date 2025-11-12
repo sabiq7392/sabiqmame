@@ -1,29 +1,37 @@
 {
-  "name": "react-pdf-sample-page-next",
-  "version": "4.0.0",
-  "description": "A sample page for React-PDF.",
+  "name": "mame-tools-web",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "preview": "next preview"
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "author": {
-    "name": "Wojciech Maj",
-    "email": "kontakt@wojtekmaj.pl"
-  },
-  "license": "MIT",
   "dependencies": {
-    "@wojtekmaj/react-hooks": "^1.20.0",
-    "next": "^15.1.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-pdf": "latest"
+    "@ant-design/cssinjs": "^1.18.0",
+    "@ant-design/icons": "^5.3.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@react-icons/all-files": "^4.1.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "antd": "^5.20.0",
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-markdown": "^9.1.0",
+    "react-syntax-highlighter": "^16.1.0"
   },
   "devDependencies": {
-    "@types/node": "22.13.5",
-    "@types/react": "19.0.10",
-    "typescript": "5.7.3"
+    "@types/node": "^20.12.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.4.0"
   }
 }
