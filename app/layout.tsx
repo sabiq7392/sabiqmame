@@ -19,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/me/logo.svg" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
