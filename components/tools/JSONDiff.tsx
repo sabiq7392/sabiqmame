@@ -3,8 +3,7 @@
 import { useState, useRef } from 'react'
 import { Card, Typography, Input, Button, Space, Alert, Tabs } from 'antd'
 import { SwapOutlined, ClearOutlined, CopyOutlined } from '@ant-design/icons'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import ReactJson from 'react-json-view'
 import { useTheme } from '@/contexts/ThemeContext'
 
 const { Title, Text } = Typography
@@ -25,6 +24,8 @@ export default function JSONDiff() {
   const [error, setError] = useState<string | null>(null)
   const [formattedJson1, setFormattedJson1] = useState('')
   const [formattedJson2, setFormattedJson2] = useState('')
+  const [parsedJson1, setParsedJson1] = useState<any>(null)
+  const [parsedJson2, setParsedJson2] = useState<any>(null)
   const formatTimeoutRef1 = useRef<NodeJS.Timeout | null>(null)
   const formatTimeoutRef2 = useRef<NodeJS.Timeout | null>(null)
 
@@ -60,6 +61,8 @@ export default function JSONDiff() {
       const obj1 = parseJSON(json1)
       const obj2 = parseJSON(json2)
 
+      setParsedJson1(obj1)
+      setParsedJson2(obj2)
       setFormattedJson1(formatJSON(json1))
       setFormattedJson2(formatJSON(json2))
 
@@ -67,6 +70,8 @@ export default function JSONDiff() {
       setDiffResult(result)
     } catch (e: any) {
       setError(e.message)
+      setParsedJson1(null)
+      setParsedJson2(null)
     }
   }
 
@@ -120,6 +125,8 @@ export default function JSONDiff() {
     setError(null)
     setFormattedJson1('')
     setFormattedJson2('')
+    setParsedJson1(null)
+    setParsedJson2(null)
   }
 
   const copyToClipboard = (text: string) => {
@@ -137,9 +144,9 @@ export default function JSONDiff() {
 
   const tryParseJSON = (text: string): any | null => {
     if (!text.trim()) return null
-    
+
     const trimmed = text.trim()
-    
+
     // Try 1: Parse langsung sebagai JSON object
     try {
       const parsed = JSON.parse(trimmed)
@@ -183,10 +190,10 @@ export default function JSONDiff() {
             // Jika wrap dengan quotes gagal, coba unescape langsung
             // Strategy: Unescape \" menjadi " dan handle nested JSON string
             let cleaned = trimmed
-            
+
             // Step 1: Unescape escaped quotes: \" -> "
             cleaned = cleaned.replace(/\\"/g, '"')
-            
+
             // Step 2: Handle other escape sequences
             cleaned = cleaned
               .replace(/\\n/g, '\n')
@@ -195,7 +202,7 @@ export default function JSONDiff() {
               .replace(/\\b/g, '\b')
               .replace(/\\f/g, '\f')
               .replace(/\\\\/g, '\\')
-            
+
             // Step 3: Parse JSON - jika gagal karena nested JSON string, fix manual
             try {
               return JSON.parse(cleaned)
@@ -210,22 +217,22 @@ export default function JSONDiff() {
               let escapeNext = false
               let isValue = false
               let lastColonPos = -1
-              
+
               for (let i = 0; i < cleaned.length; i++) {
                 const char = cleaned[i]
-                
+
                 if (escapeNext) {
                   result += char
                   escapeNext = false
                   continue
                 }
-                
+
                 if (char === '\\') {
                   escapeNext = true
                   result += char
                   continue
                 }
-                
+
                 if (char === '"') {
                   if (!inString) {
                     // Start of string
@@ -261,7 +268,7 @@ export default function JSONDiff() {
                   result += char
                 }
               }
-              
+
               try {
                 return JSON.parse(result)
               } catch {
@@ -284,7 +291,7 @@ export default function JSONDiff() {
           }
         }
       }
-      
+
       // Try 4: Jika text dimulai dengan quote, coba parse sebagai string lalu parse lagi
       if ((trimmed.startsWith('"') && trimmed.endsWith('"')) && trimmed.length > 1) {
         try {
@@ -298,19 +305,19 @@ export default function JSONDiff() {
           return null
         }
       }
-      
+
       return null
     }
   }
 
   const handleJSONInput = (value: string, setter: (val: string) => void, timeoutRef: React.MutableRefObject<NodeJS.Timeout | null>) => {
     setter(value)
-    
+
     // Clear previous timeout
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
-    
+
     // Auto-format setelah user selesai mengetik (debounce)
     if (value.trim()) {
       timeoutRef.current = setTimeout(() => {
@@ -329,7 +336,7 @@ export default function JSONDiff() {
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>, setter: (val: string) => void) => {
     const pastedText = e.clipboardData.getData('text')
-    
+
     const parsed = tryParseJSON(pastedText)
     if (parsed !== null) {
       // Format JSON
@@ -341,95 +348,6 @@ export default function JSONDiff() {
     // Jika tidak valid, biarkan paste normal
   }
 
-  const highlightJSONWithDiff = (jsonString: string, diffResult: DiffResult, type: 'json1' | 'json2') => {
-    try {
-      const lines = jsonString.split('\n')
-      const highlightedLines: JSX.Element[] = []
-
-      // Create a map of paths to check
-      const pathsToCheck = type === 'json1' 
-        ? [...diffResult.removed, ...diffResult.modified]
-        : [...diffResult.added, ...diffResult.modified]
-
-      lines.forEach((line, lineIndex) => {
-        let bgColor = ''
-        let lineClass = ''
-        let borderColor = ''
-
-        // Check if this line contains any diff paths
-        const checkPath = (path: string): boolean => {
-          // Extract the key from path (last part)
-          const pathParts = path.split('.')
-          const key = pathParts[pathParts.length - 1]
-          
-          // Check if line contains the key with quotes
-          const keyPattern = new RegExp(`"${key}"\\s*:`, 'g')
-          return keyPattern.test(line)
-        }
-
-        const hasDiff = pathsToCheck.some(path => checkPath(path))
-        
-        if (hasDiff) {
-          const isRemoved = type === 'json1' && diffResult.removed.some(path => checkPath(path))
-          const isAdded = type === 'json2' && diffResult.added.some(path => checkPath(path))
-          const isModified = diffResult.modified.some(path => checkPath(path))
-
-          if (isRemoved) {
-            bgColor = 'bg-red-500/20 dark:bg-red-500/20'
-            lineClass = 'text-red-700 dark:text-red-300'
-            borderColor = 'border-l-red-500'
-          } else if (isAdded) {
-            bgColor = 'bg-green-500/20 dark:bg-green-500/20'
-            lineClass = 'text-green-700 dark:text-green-300'
-            borderColor = 'border-l-green-500'
-          } else if (isModified) {
-            bgColor = 'bg-yellow-500/20 dark:bg-yellow-500/20'
-            lineClass = 'text-yellow-700 dark:text-yellow-300'
-            borderColor = 'border-l-yellow-500'
-          }
-        }
-
-        highlightedLines.push(
-          <div
-            key={lineIndex}
-            className={`${bgColor} ${lineClass} px-1 py-0.5 rounded min-h-[1.5rem] ${hasDiff ? `border-l-2 ${borderColor}` : ''}`}
-          >
-            <SyntaxHighlighter
-              language="json"
-              style={theme === 'dark' ? vscDarkPlus : vs}
-              customStyle={{
-                margin: 0,
-                padding: 0,
-                background: 'transparent',
-                fontSize: '0.875rem',
-                lineHeight: '1.5',
-              }}
-              PreTag="span"
-            >
-              {line || ' '}
-            </SyntaxHighlighter>
-          </div>
-        )
-      })
-
-      return <div className="space-y-0 font-mono">{highlightedLines}</div>
-    } catch {
-      return (
-        <SyntaxHighlighter
-          language="json"
-          style={theme === 'dark' ? vscDarkPlus : vs}
-          customStyle={{
-            margin: 0,
-            padding: 0,
-            fontSize: '0.875rem',
-            lineHeight: '1.5',
-          }}
-        >
-          {jsonString}
-        </SyntaxHighlighter>
-      )
-    }
-  }
 
   return (
     <div className="max-w-[1400px] mx-auto">
@@ -456,7 +374,7 @@ export default function JSONDiff() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* JSON 1 */}
-        <Card className="rounded-[20px] p-6 glass">
+        <div className="rounded-[20px] p-6 glass-strong">
           <div className="flex justify-between items-center mb-4">
             <Title level={4} className="!m-0 text-gray-900 dark:text-white">
               JSON 1
@@ -487,10 +405,10 @@ export default function JSONDiff() {
             placeholder='{"name": "John", "age": 30} atau paste JSON stringified'
             className="bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 font-mono text-sm"
           />
-        </Card>
+        </div>
 
         {/* JSON 2 */}
-        <Card className="rounded-[20px] p-6 glass">
+        <div className="rounded-[20px] p-6 glass-strong">
           <div className="flex justify-between items-center mb-4">
             <Title level={4} className="!m-0 text-gray-900 dark:text-white">
               JSON 2
@@ -521,7 +439,7 @@ export default function JSONDiff() {
             placeholder='{"name": "John", "age": 31} atau paste JSON stringified'
             className="bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 font-mono text-sm"
           />
-        </Card>
+        </div>
       </div>
 
       {/* Action Buttons */}
@@ -554,7 +472,7 @@ export default function JSONDiff() {
 
       {/* Diff Results */}
       {diffResult && (
-        <Card className="rounded-[20px] p-6 glass">
+        <div className="rounded-[20px] p-6 glass-strong">
           <Title level={3} className="!m-0 !mb-6 text-gray-900 dark:text-white text-2xl font-semibold">
             Differences
           </Title>
@@ -582,8 +500,30 @@ export default function JSONDiff() {
                             Copy
                           </Button>
                         </div>
-                        <div className="rounded-xl overflow-hidden p-4 bg-gray-50 dark:bg-dark-bg-secondary max-h-[600px] overflow-y-auto">
-                          {highlightJSONWithDiff(formattedJson1 || '{}', diffResult, 'json1')}
+                        <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e] max-h-[600px] overflow-y-auto">
+                          {parsedJson1 ? (
+                            <ReactJson
+                              src={parsedJson1}
+                              theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
+                              collapsed={false}
+                              collapseStringsAfterLength={100}
+                              displayDataTypes={false}
+                              displayObjectSize={true}
+                              enableClipboard={true}
+                              iconStyle="triangle"
+                              indentWidth={2}
+                              name={null}
+                              sortKeys={false}
+                              style={{
+                                fontSize: '14px',
+                                fontFamily: 'monospace',
+                              }}
+                            />
+                          ) : (
+                            <pre className="text-sm font-mono text-gray-400 dark:text-white/40">
+                              {formattedJson1 || '{}'}
+                            </pre>
+                          )}
                         </div>
                         <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                           <span className="inline-block mr-4">
@@ -611,8 +551,30 @@ export default function JSONDiff() {
                             Copy
                           </Button>
                         </div>
-                        <div className="rounded-xl overflow-hidden p-4 bg-gray-50 dark:bg-dark-bg-secondary max-h-[600px] overflow-y-auto">
-                          {highlightJSONWithDiff(formattedJson2 || '{}', diffResult, 'json2')}
+                        <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e] max-h-[600px] overflow-y-auto">
+                          {parsedJson2 ? (
+                            <ReactJson
+                              src={parsedJson2}
+                              theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
+                              collapsed={false}
+                              collapseStringsAfterLength={100}
+                              displayDataTypes={false}
+                              displayObjectSize={true}
+                              enableClipboard={true}
+                              iconStyle="triangle"
+                              indentWidth={2}
+                              name={null}
+                              sortKeys={false}
+                              style={{
+                                fontSize: '14px',
+                                fontFamily: 'monospace',
+                              }}
+                            />
+                          ) : (
+                            <pre className="text-sm font-mono text-gray-400 dark:text-white/40">
+                              {formattedJson2 || '{}'}
+                            </pre>
+                          )}
                         </div>
                         <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                           <span className="inline-block mr-4">
@@ -726,8 +688,30 @@ export default function JSONDiff() {
                         Copy
                       </Button>
                     </div>
-                    <div className="rounded-xl overflow-hidden p-4 bg-gray-50 dark:bg-dark-bg-secondary">
-                      {highlightJSONWithDiff(formattedJson1 || '{}', diffResult, 'json1')}
+                    <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e]">
+                      {parsedJson1 ? (
+                        <ReactJson
+                          src={parsedJson1}
+                          theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
+                          collapsed={false}
+                          collapseStringsAfterLength={100}
+                          displayDataTypes={false}
+                          displayObjectSize={true}
+                          enableClipboard={true}
+                          iconStyle="triangle"
+                          indentWidth={2}
+                          name={null}
+                          sortKeys={false}
+                          style={{
+                            fontSize: '14px',
+                            fontFamily: 'monospace',
+                          }}
+                        />
+                      ) : (
+                        <pre className="text-sm font-mono text-gray-400 dark:text-white/40">
+                          {formattedJson1 || '{}'}
+                        </pre>
+                      )}
                     </div>
                     <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                       <span className="inline-block mr-4">
@@ -756,8 +740,30 @@ export default function JSONDiff() {
                         Copy
                       </Button>
                     </div>
-                    <div className="rounded-xl overflow-hidden p-4 bg-gray-50 dark:bg-dark-bg-secondary">
-                      {highlightJSONWithDiff(formattedJson2 || '{}', diffResult, 'json2')}
+                    <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e]">
+                      {parsedJson2 ? (
+                        <ReactJson
+                          src={parsedJson2}
+                          theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
+                          collapsed={false}
+                          collapseStringsAfterLength={100}
+                          displayDataTypes={false}
+                          displayObjectSize={true}
+                          enableClipboard={true}
+                          iconStyle="triangle"
+                          indentWidth={2}
+                          name={null}
+                          sortKeys={false}
+                          style={{
+                            fontSize: '14px',
+                            fontFamily: 'monospace',
+                          }}
+                        />
+                      ) : (
+                        <pre className="text-sm font-mono text-gray-400 dark:text-white/40">
+                          {formattedJson2 || '{}'}
+                        </pre>
+                      )}
                     </div>
                     <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                       <span className="inline-block mr-4">
@@ -774,7 +780,7 @@ export default function JSONDiff() {
               },
             ]}
           />
-        </Card>
+        </div>
       )}
     </div>
   )

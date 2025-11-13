@@ -3,8 +3,7 @@
 import { useState, useRef } from 'react'
 import { Card, Typography, Input, Button, Space, Alert } from 'antd'
 import { ClearOutlined, CopyOutlined } from '@ant-design/icons'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import ReactJson from 'react-json-view'
 import { useTheme } from '@/contexts/ThemeContext'
 import { message } from 'antd'
 
@@ -15,6 +14,7 @@ export default function JSONBeautifier() {
   const { theme } = useTheme()
   const [inputJson, setInputJson] = useState('')
   const [formattedJson, setFormattedJson] = useState('')
+  const [parsedJson, setParsedJson] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const formatTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -215,11 +215,19 @@ export default function JSONBeautifier() {
       }
 
       try {
-        const formatted = formatJSON(value)
-        setFormattedJson(formatted)
+        const parsed = tryParseJSON(value)
+        if (parsed !== null) {
+          setParsedJson(parsed)
+          const formatted = JSON.stringify(parsed, null, 2)
+          setFormattedJson(formatted)
+        } else {
+          setParsedJson(null)
+          setFormattedJson('')
+        }
       } catch (e: any) {
         setError(`Invalid JSON: ${e.message}`)
         setFormattedJson('')
+        setParsedJson(null)
       }
     }, 300)
   }
@@ -240,11 +248,19 @@ export default function JSONBeautifier() {
       }
 
       try {
-        const formatted = formatJSON(pastedText)
-        setFormattedJson(formatted)
+        const parsed = tryParseJSON(pastedText)
+        if (parsed !== null) {
+          setParsedJson(parsed)
+          const formatted = JSON.stringify(parsed, null, 2)
+          setFormattedJson(formatted)
+        } else {
+          setParsedJson(null)
+          setFormattedJson('')
+        }
       } catch (e: any) {
         setError(`Invalid JSON: ${e.message}`)
         setFormattedJson('')
+        setParsedJson(null)
       }
     }, 100)
   }
@@ -259,6 +275,7 @@ export default function JSONBeautifier() {
   const handleClear = () => {
     setInputJson('')
     setFormattedJson('')
+    setParsedJson(null)
     setError(null)
     if (formatTimeoutRef.current) {
       clearTimeout(formatTimeoutRef.current)
@@ -316,7 +333,7 @@ export default function JSONBeautifier() {
         </div>
 
         {/* Formatted Output Section */}
-        <Card className="rounded-2xl glass">
+        <div className="rounded-2xl glass-strong p-6">
           <div className="mb-4 flex items-center justify-between">
             <Title level={4} className="!m-0 text-gray-900 dark:text-white text-lg font-semibold">
               Formatted JSON
@@ -332,23 +349,42 @@ export default function JSONBeautifier() {
             </Button>
           </div>
           <div className="relative">
-            {formattedJson ? (
-              <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20">
-                <SyntaxHighlighter
-                  language="json"
-                  style={theme === 'dark' ? vscDarkPlus : vs}
-                  customStyle={{
+            {parsedJson ? (
+              <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 bg-white dark:bg-[#1e1e1e]">
+                <div style={{ maxHeight: '600px', overflow: 'auto', padding: '16px' }}>
+                  <ReactJson
+                    src={parsedJson}
+                    theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
+                    collapsed={false}
+                    collapseStringsAfterLength={100}
+                    displayDataTypes={false}
+                    displayObjectSize={true}
+                    enableClipboard={true}
+                    iconStyle="triangle"
+                    indentWidth={2}
+                    name={null}
+                    sortKeys={false}
+                    style={{
+                      fontSize: '14px',
+                      fontFamily: 'monospace',
+                    }}
+                  />
+                </div>
+              </div>
+            ) : formattedJson ? (
+              <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 bg-white dark:bg-[#1e1e1e]">
+                <div style={{ maxHeight: '600px', overflow: 'auto', padding: '16px' }}>
+                  <pre style={{
                     margin: 0,
-                    padding: '16px',
                     fontSize: '14px',
-                    lineHeight: '1.6',
-                    background: theme === 'dark' ? '#1e1e1e' : '#ffffff',
-                    maxHeight: '600px',
-                    overflow: 'auto',
-                  }}
-                >
-                  {formattedJson}
-                </SyntaxHighlighter>
+                    fontFamily: 'monospace',
+                    color: theme === 'dark' ? '#d4d4d4' : '#24292e',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word'
+                  }}>
+                    {formattedJson}
+                  </pre>
+                </div>
               </div>
             ) : (
               <div className="h-[480px] flex items-center justify-center border border-gray-200 dark:border-white/20 rounded-lg bg-white/60 dark:bg-white/5">
@@ -358,7 +394,7 @@ export default function JSONBeautifier() {
               </div>
             )}
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   )
