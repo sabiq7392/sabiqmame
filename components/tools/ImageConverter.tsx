@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Card, Typography, Upload, Button, Select, Slider, Space, Alert, Image } from 'antd'
-import { UploadOutlined, DownloadOutlined, ClearOutlined } from '@ant-design/icons'
+import { UploadOutlined, DownloadOutlined, ClearOutlined, InboxOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
 
@@ -168,19 +168,21 @@ export default function ImageConverter() {
             )}
           </div>
 
-          <Upload
+          <Upload.Dragger
             beforeUpload={handleFileUpload}
-            showUploadList={false}
+            showUploadList={true}
             accept="image/*"
-            className="w-full"
+            height={300}
           >
-            <Button
-              icon={<UploadOutlined />}
-              className="w-full h-32 bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 hover:border-primary-blue dark:hover:border-primary-blue"
-            >
-              Click or drag image to upload
-            </Button>
-          </Upload>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="text-gray-600 dark:text-white/60 text-sm">
+              Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+              banned files.
+            </p>
+          </Upload.Dragger>
 
           {originalFile && (
             <div className="mt-4">

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import StyledComponentsRegistry from '@/lib/AntdRegistry'
 import ThemeWrapper from '@/components/ThemeWrapper'
+import NextTopLoader from 'nextjs-toploader'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -84,6 +85,7 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+        <NextTopLoader />
         <StyledComponentsRegistry>
           <ThemeWrapper>
             {children}
