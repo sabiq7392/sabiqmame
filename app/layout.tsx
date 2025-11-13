@@ -4,6 +4,7 @@ import './globals.css'
 import StyledComponentsRegistry from '@/lib/AntdRegistry'
 import ThemeWrapper from '@/components/ThemeWrapper'
 import NextTopLoader from 'nextjs-toploader'
+import Navbar from '@/components/Navbar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -88,7 +89,12 @@ export default function RootLayout({
         <NextTopLoader />
         <StyledComponentsRegistry>
           <ThemeWrapper>
-            {children}
+            <div className="min-h-screen w-full relative pt-24">
+              <Navbar />
+              <main className="max-w-[1200px] mx-auto min-h-[calc(100vh-96px)] p-8 md:p-4">
+                {children}
+              </main>
+            </div>
           </ThemeWrapper>
         </StyledComponentsRegistry>
       </body>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import { RandomImageGallery } from '@/components/RandomImageGallery'
+import ToolsMenu from '@/components/tools/ToolsMenu'
 
 export const metadata: Metadata = {
   title: 'Random Image Gallery',
@@ -15,12 +16,10 @@ export const metadata: Metadata = {
 
 export default function RandomImagePage() {
   return (
-    <main className="min-h-screen w-full relative pt-24">
-      <Navbar />
-      <div className="w-full min-h-[calc(100vh-96px)] p-4 md:p-8 max-w-[1200px] mx-auto">
-        <RandomImageGallery />
-      </div>
-    </main>
+    <>
+      <ToolsMenu />
+      <RandomImageGallery />
+    </>
   )
 }
 

@@ -16,13 +16,10 @@ export const metadata: Metadata = {
 
 export default function MarkdownPreviewPage() {
   return (
-    <main className="min-h-screen w-full relative pt-24">
-      <Navbar />
-      <div className="max-w-[1200px] mx-auto min-h-[calc(100vh-96px)] p-8 md:p-4">
-        <ToolsMenu />
-        <MarkdownPreview />
-      </div>
-    </main>
+    <>
+      <ToolsMenu />
+      <MarkdownPreview />
+    </>
   )
 }
 
