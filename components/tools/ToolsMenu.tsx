@@ -10,7 +10,8 @@ import {
   EditOutlined,
   LockOutlined,
   TableOutlined,
-  KeyOutlined
+  KeyOutlined,
+  ClockCircleOutlined
 } from '@ant-design/icons'
 
 const { Text } = Typography
@@ -86,6 +87,13 @@ export const toolItems: Tool[] = [
     description: 'Encode text to Base64 or decode Base64 to text instantly',
     icon: <KeyOutlined />,
     href: '/tools/base64-encoder',
+  },
+  {
+    id: 'datetime-converter',
+    name: 'Date & Time Converter',
+    description: 'Convert, format, and calculate dates and times with ease',
+    icon: <ClockCircleOutlined />,
+    href: '/tools/datetime-converter',
   }
 ]
 
