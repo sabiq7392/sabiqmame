@@ -15,12 +15,13 @@ interface Tool {
 }
 
 const tools: Tool[] = [
-  // {
-  //   id: 'convert-image',
-  //   name: 'Convert Image',
-  //   description: 'Convert and optimize your images between different formats',
-  //   icon: <FileImageOutlined />,
-  // },
+  {
+    id: 'convert-image',
+    name: 'Convert Image',
+    description: 'Convert and optimize your images between different formats',
+    icon: <img src="/icon/convert-image.png" alt="Convert Image" />,
+    href: '/tools/convert-image',
+  },
   // {
   //   id: 'cv-maker',
   //   name: 'CV Maker',
@@ -32,21 +33,21 @@ const tools: Tool[] = [
     id: 'json-diff',
     name: 'JSON Diff',
     description: 'Compare and find differences between two JSON objects',
-    icon: <DiffOutlined />,
+    icon: <img src="/icon/json-diff.png" alt="JSON Diff" />,
     href: '/tools/json-diff',
   },
   {
     id: 'json-beautifier',
     name: 'JSON Beautifier',
     description: 'Format and beautify your JSON with syntax highlighting',
-    icon: <CodeOutlined />,
+    icon: <img src="/icon/json-beautifier.png" alt="JSON Beautifier" />,
     href: '/tools/json-beautifier',
   },
   {
     id: 'random-image',
     name: 'Random Image',
     description: 'Get a random image from the internet',
-    icon: <FileImageOutlined />,
+    icon: <img src="/icon/random-image.png" alt="Random Image" />,
     href: '/tools/random-image',
   }
 ]
@@ -70,7 +71,7 @@ export default function ToolsGrid() {
               className="rounded-lg md:rounded-xl lg:rounded-2xl glass-strong hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-blue/20 transition-all cursor-pointer group h-full"
             >
               <div className="flex flex-col items-center text-center p-3 md:p-4 lg:p-6">
-                <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-primary-blue/20 border border-primary-blue/50 flex items-center justify-center mb-2 md:mb-3 lg:mb-4 group-hover:bg-primary-blue/30 group-hover:border-primary-blue transition-all">
+                <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border border-primary-gray/20 p-1 flex items-center justify-center mb-2 md:mb-3 lg:mb-4 group-hover:border-primary-blue transition-all">
                   <span className="text-2xl md:text-3xl lg:text-4xl text-primary-blue-light">
                     {tool.icon}
                   </span>
