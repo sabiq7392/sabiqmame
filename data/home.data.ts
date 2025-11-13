@@ -51,13 +51,17 @@ export interface EducationData {
   institution: string
   period: string
   location: string
+  image: string
+  href: string
 }
 
 export interface OrganizationData {
   name: string
   institution: string
   period: string
+  image: string
   activities: string[]
+  href: string
 }
 
 export interface ExperienceRole {
@@ -199,11 +203,15 @@ export const homeData: HomeData = {
     institution: 'Sekolah Tinggi Teknologi Terpadu Nurul Fikri',
     period: 'Sept 2020 – Sept 2024',
     location: 'Jakarta, Indonesia',
+    image: '/icon/stttnf.jpg',
+    href: 'hhttps://nurulfikri.ac.id',
   },
   organization: {
     name: 'Google Developer Student Club (GDSC)',
     institution: 'STT Terpadu Nurul Fikri',
     period: 'Dec 2022 – Aug 2023',
+    image: '/gallery/random/gdsc.webp',
+    href: 'https://www.instagram.com/p/Cobie01r4Ls/',
     activities: [
       'Organized and managed frontend team',
       'Led 3-month bootcamp as instructor',
