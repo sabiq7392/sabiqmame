@@ -17,9 +17,9 @@ export default function EducationSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-6 rounded-2xl glass-soft">
             <Title level={4} className="!mb-2 text-gray-900 dark:text-white text-lg">Education</Title>
-            <Link href={education.href} className="flex items-start gap-4" target="_blank">
+            <div className="flex items-start gap-4">
               <Image src={education.image} alt={education.degree} width={130} className="border border-gray-200 dark:border-white/10 rounded-lg" />
-              <div>
+              <Link href={education.href} target="_blank">
                 <Text className="text-gray-800 dark:text-white/90 text-base font-semibold block mb-2">
                   {education.degree}
                 </Text>
@@ -29,14 +29,14 @@ export default function EducationSection() {
                 <Text className="text-gray-500 dark:text-white/60 text-sm">
                   {education.period} · {education.location}
                 </Text>
-              </div>
-            </Link>
+              </Link>
+            </div>
           </div>
           <div className="p-6 rounded-2xl glass-soft">
             <Title level={4} className="!mb-2 text-gray-900 dark:text-white text-lg">Organization</Title>
-            <Link href={organization.href} className="flex items-start gap-4" target="_blank">
+            <div className="flex items-start gap-4">
               <Image src={organization.image} alt={organization.name} width={130} className="border border-gray-200 dark:border-white/10 rounded-lg" />
-              <div>
+              <Link href={organization.href} target="_blank">
                 <Text className="text-gray-800 dark:text-white/90 text-base font-semibold block mb-2">
                   {organization.name}
                 </Text>
@@ -54,8 +54,8 @@ export default function EducationSection() {
                     </span>
                   ))}
                 </Text>
-              </div>
-            </Link>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

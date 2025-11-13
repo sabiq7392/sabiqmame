@@ -1,7 +1,6 @@
 'use client'
 
-import { Card, Typography } from 'antd'
-import { FileTextOutlined, FileImageOutlined, DiffOutlined, CodeOutlined, EditOutlined, LockOutlined } from '@ant-design/icons'
+import { Typography } from 'antd'
 import Link from 'next/link'
 import { toolItems } from './ToolsMenu'
 

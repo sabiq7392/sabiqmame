@@ -205,7 +205,7 @@ export const homeData: HomeData = {
     period: 'Sept 2020 – Sept 2024',
     location: 'Jakarta, Indonesia',
     image: '/icon/stttnf.jpg',
-    href: 'hhttps://nurulfikri.ac.id',
+    href: 'https://nurulfikri.ac.id',
   },
   organization: {
     name: 'Google Developer Student Club (GDSC)',

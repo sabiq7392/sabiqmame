@@ -8,7 +8,8 @@ import {
   DiffOutlined,
   CodeOutlined,
   EditOutlined,
-  LockOutlined
+  LockOutlined,
+  TableOutlined
 } from '@ant-design/icons'
 
 const { Text } = Typography
@@ -70,6 +71,13 @@ export const toolItems: Tool[] = [
     description: 'Generate secure, random passwords with customizable options',
     icon: <LockOutlined />,
     href: '/tools/password-generator',
+  },
+  {
+    id: 'json-to-csv',
+    name: 'JSON to CSV',
+    description: 'Convert JSON arrays to CSV format with nested object support',
+    icon: <TableOutlined />,
+    href: '/tools/json-to-csv',
   }
 ]
 
