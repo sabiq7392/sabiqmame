@@ -78,6 +78,7 @@ export interface ExperienceRole {
 export interface ExperienceData {
   company: string
   employmentType: string
+  logo?: string
   roles: ExperienceRole[]
 }
 
@@ -222,6 +223,7 @@ export const homeData: HomeData = {
     {
       company: 'Quantum Teknologi (Nusantara)',
       employmentType: 'Purnawaktu',
+      logo: '/icon/quantum.jpg',
       roles: [
         {
           title: 'Full Stack Engineer at National Certificate Management Project',
@@ -277,6 +279,7 @@ export const homeData: HomeData = {
     {
       company: 'GDSC : STT Terpadu Nurul Fikri',
       employmentType: 'Frontend Lead',
+      logo: '/icon/gdscnf.jpg',
       roles: [
         {
           title: 'Frontend Lead',
@@ -292,6 +295,7 @@ export const homeData: HomeData = {
     {
       company: 'Sekolah Tinggi Teknologi Terpadu Nurul Fikri',
       employmentType: 'Assistant Lecturer of Web Programming',
+      logo: '/icon/stttnf.jpg',
       roles: [
         {
           title: 'Assistant Lecturer of Web Programming',

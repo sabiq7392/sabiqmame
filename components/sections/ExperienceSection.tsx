@@ -44,9 +44,18 @@ export default function ExperienceSection() {
               <div className="ml-4 md:ml-2">
                 {/* Company Header */}
                 <div className="mb-4">
-                  <Title level={3} className="!m-0 !mb-2 text-gray-900 dark:text-white text-xl md:text-lg font-semibold">
-                    {experience.company}
-                  </Title>
+                  <div className="flex items-center gap-3 mb-2">
+                    {experience.logo && (
+                      <img
+                        src={experience.logo}
+                        alt={experience.company}
+                        className="w-12 h-12 md:w-10 md:h-10 rounded-lg object-cover border border-gray-200 dark:border-white/20"
+                      />
+                    )}
+                    <Title level={3} className="!m-0 text-gray-900 dark:text-white text-xl md:text-lg font-semibold">
+                      {experience.company}
+                    </Title>
+                  </div>
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <Tag color="blue" className="text-xs px-2 py-0.5 border-primary-blue/50 bg-primary-blue/10 text-primary-blue-light">
                       {experience.employmentType}
