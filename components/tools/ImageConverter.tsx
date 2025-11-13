@@ -139,7 +139,7 @@ export default function ImageConverter() {
   const supportsQuality = outputFormat === 'image/jpeg' || outputFormat === 'image/webp'
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <div>
       <div className="mb-8">
         <Title level={1} className="!m-0 text-gray-900 dark:text-white text-4xl md:text-3xl font-bold mb-4">
           Image Converter

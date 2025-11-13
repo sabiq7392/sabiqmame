@@ -3,68 +3,11 @@
 import { Card, Typography } from 'antd'
 import { FileTextOutlined, FileImageOutlined, DiffOutlined, CodeOutlined, EditOutlined, LockOutlined } from '@ant-design/icons'
 import Link from 'next/link'
+import { toolItems } from './ToolsMenu'
 
 const { Title } = Typography
 
-interface Tool {
-  id: string
-  name: string
-  description: string
-  icon: React.ReactNode
-  href?: string
-}
 
-const tools: Tool[] = [
-  {
-    id: 'convert-image',
-    name: 'Convert Image',
-    description: 'Convert and optimize your images between different formats',
-    icon: <img src="/icon/convert-image.png" alt="Convert Image" />,
-    href: '/tools/convert-image',
-  },
-  // {
-  //   id: 'cv-maker',
-  //   name: 'CV Maker',
-  //   description: 'Create and customize your professional CV easily',
-  //   icon: <FileTextOutlined />,
-  //   href: '/tools/cv-maker',
-  // },
-  {
-    id: 'json-diff',
-    name: 'JSON Diff',
-    description: 'Compare and find differences between two JSON objects',
-    icon: <img src="/icon/json-diff.png" alt="JSON Diff" />,
-    href: '/tools/json-diff',
-  },
-  {
-    id: 'json-beautifier',
-    name: 'JSON Beautifier',
-    description: 'Format and beautify your JSON with syntax highlighting',
-    icon: <img src="/icon/json-beautifier.png" alt="JSON Beautifier" />,
-    href: '/tools/json-beautifier',
-  },
-  {
-    id: 'random-image',
-    name: 'Random Image',
-    description: 'Get a random image from the internet',
-    icon: <img src="/icon/random-image.png" alt="Random Image" />,
-    href: '/tools/random-image',
-  },
-  {
-    id: 'markdown-preview',
-    name: 'Markdown Preview',
-    description: 'Write Markdown and see live preview with GFM support',
-    icon: <img src="/icon/markdown.png" alt="Markdown Preview" />,
-    href: '/tools/markdown-preview',
-  },
-  {
-    id: 'password-generator',
-    name: 'Password Generator',
-    description: 'Generate secure, random passwords with customizable options',
-    icon: <LockOutlined />,
-    href: '/tools/password-generator',
-  }
-]
 
 export default function ToolsGrid() {
   return (
@@ -79,7 +22,7 @@ export default function ToolsGrid() {
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 lg:gap-6 mt-8">
-        {tools.map((tool) => (
+        {toolItems.map((tool) => (
           <Link key={tool.id} href={tool.href || '#'}>
             <div
               className="rounded-lg md:rounded-xl lg:rounded-2xl glass-strong hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-blue/20 transition-all cursor-pointer group h-full"

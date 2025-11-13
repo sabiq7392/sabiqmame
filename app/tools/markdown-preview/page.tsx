@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import MarkdownPreview from '@/components/tools/MarkdownPreview'
+import ToolsMenu from '@/components/tools/ToolsMenu'
 
 export const metadata: Metadata = {
   title: 'Markdown Preview',
@@ -17,7 +18,8 @@ export default function MarkdownPreviewPage() {
   return (
     <main className="min-h-screen w-full relative pt-24">
       <Navbar />
-      <div className="w-full min-h-[calc(100vh-96px)] p-8 md:p-4">
+      <div className="max-w-[1200px] mx-auto min-h-[calc(100vh-96px)] p-8 md:p-4">
+        <ToolsMenu />
         <MarkdownPreview />
       </div>
     </main>

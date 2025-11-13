@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import JSONBeautifier from '@/components/tools/JSONBeautifier'
+import ToolsMenu from '@/components/tools/ToolsMenu'
 
 export const metadata: Metadata = {
   title: 'JSON Beautifier',
@@ -18,6 +19,7 @@ export default function JSONBeautifierPage() {
     <main className="min-h-screen w-full relative pt-24">
       <Navbar />
       <div className="w-full min-h-[calc(100vh-96px)] p-8 md:p-4 max-w-[1200px] mx-auto">
+        <ToolsMenu />
         <JSONBeautifier />
       </div>
     </main>

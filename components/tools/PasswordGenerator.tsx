@@ -31,7 +31,7 @@ export default function PasswordGenerator() {
 
   const generatePassword = useCallback(() => {
     let charset = ''
-    
+
     if (includeUppercase) charset += UPPERCASE
     if (includeLowercase) charset += LOWERCASE
     if (includeNumbers) charset += NUMBERS
@@ -102,7 +102,7 @@ export default function PasswordGenerator() {
   const strength = getPasswordStrength(password)
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <div className="">
       <div className="mb-8">
         <Title level={1} className="!m-0 text-gray-900 dark:text-white text-4xl md:text-3xl font-bold mb-4">
           Password Generator
@@ -220,12 +220,11 @@ export default function PasswordGenerator() {
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                   <div
-                    className={`h-2.5 rounded-full transition-all duration-300 ${
-                      strength.level === 'weak' ? 'bg-red-500' :
-                      strength.level === 'medium' ? 'bg-orange-500' :
-                      strength.level === 'strong' ? 'bg-blue-500' :
-                      'bg-green-500'
-                    }`}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${strength.level === 'weak' ? 'bg-red-500' :
+                        strength.level === 'medium' ? 'bg-orange-500' :
+                          strength.level === 'strong' ? 'bg-blue-500' :
+                            'bg-green-500'
+                      }`}
                     style={{
                       width: `${(strength.score / 10) * 100}%`,
                       maxWidth: '100%'
@@ -241,11 +240,10 @@ export default function PasswordGenerator() {
               icon={copied ? <CheckCircleOutlined /> : <CopyOutlined />}
               onClick={handleCopy}
               disabled={!password}
-              className={`w-full ${
-                copied 
-                  ? 'bg-green-500 hover:bg-green-600' 
+              className={`w-full ${copied
+                  ? 'bg-green-500 hover:bg-green-600'
                   : 'bg-primary-blue hover:bg-primary-blue-dark'
-              }`}
+                }`}
               size="large"
             >
               {copied ? 'Copied!' : 'Copy Password'}

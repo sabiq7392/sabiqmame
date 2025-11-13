@@ -107,7 +107,7 @@ export default function MarkdownPreview() {
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <div className="">
       <div className="mb-8">
         <Title level={1} className="!m-0 text-gray-900 dark:text-white text-4xl md:text-3xl font-bold mb-4">
           Markdown Preview

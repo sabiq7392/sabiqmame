@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import JSONDiff from '@/components/tools/JSONDiff'
+import ToolsMenu from '@/components/tools/ToolsMenu'
 
 export const metadata: Metadata = {
   title: 'JSON Diff',
@@ -18,6 +19,7 @@ export default function JSONDiffPage() {
     <main className="min-h-screen w-full relative pt-24">
       <Navbar />
       <div className="w-full min-h-[calc(100vh-96px)] p-8 md:p-4 max-w-[1200px] mx-auto">
+        <ToolsMenu />
         <JSONDiff />
       </div>
     </main>
