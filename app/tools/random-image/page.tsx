@@ -17,7 +17,7 @@ export default function RandomImagePage() {
   return (
     <main className="min-h-screen w-full relative pt-24">
       <Navbar />
-      <div className="w-full min-h-[calc(100vh-96px)] p-4 md:p-8">
+      <div className="w-full min-h-[calc(100vh-96px)] p-4 md:p-8 max-w-[1200px] mx-auto">
         <RandomImageGallery />
       </div>
     </main>

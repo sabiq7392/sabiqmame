@@ -139,8 +139,8 @@ export default function ImageConverter() {
   const supportsQuality = outputFormat === 'image/jpeg' || outputFormat === 'image/webp'
 
   return (
-    <div className="max-w-[1400px] mx-auto">
-      <div className="mb-8 fade-in">
+    <div className="max-w-[1200px] mx-auto">
+      <div className="mb-8">
         <Title level={1} className="!m-0 text-gray-900 dark:text-white text-4xl md:text-3xl font-bold mb-4">
           Image Converter
         </Title>
@@ -170,7 +170,7 @@ export default function ImageConverter() {
 
           <Upload.Dragger
             beforeUpload={handleFileUpload}
-            showUploadList={true}
+            showUploadList={false}
             accept="image/*"
             height={300}
           >
@@ -218,55 +218,58 @@ export default function ImageConverter() {
           </div>
 
           <Space direction="vertical" className="w-full" size="large">
-            <div>
-              <Text className="text-gray-900 dark:text-white text-sm font-medium mb-2 block">
-                Output Format:
-              </Text>
-              <Select
-                value={outputFormat}
-                onChange={setOutputFormat}
-                className="w-full"
-                size="large"
-              >
-                {SUPPORTED_FORMATS.map((format) => (
-                  <Option key={format.value} value={format.value}>
-                    {format.label}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-
-            {supportsQuality && (
-              <div>
-                <Text className="text-gray-900 dark:text-white text-sm font-medium mb-2 block">
-                  Quality: {Math.round(quality * 100)}%
-                </Text>
-                <Slider
-                  min={0.1}
-                  max={1}
-                  step={0.01}
-                  value={quality}
-                  onChange={setQuality}
-                  tooltip={{ formatter: (value) => `${Math.round((value || 0) * 100)}%` }}
-                />
-                <div className="flex justify-between text-xs text-gray-500 dark:text-white/40 mt-1">
-                  <span>Lower size</span>
-                  <span>Higher quality</span>
+            <div className={convertedImageUrl ? `h-[335px]` : ''}>
+              <Space direction="vertical" className="w-full" size="large">
+                <div>
+                  <Text className="text-gray-900 dark:text-white text-sm font-medium mb-2 block">
+                    Output Format:
+                  </Text>
+                  <Select
+                    value={outputFormat}
+                    onChange={setOutputFormat}
+                    className="w-full"
+                    size="large"
+                  >
+                    {SUPPORTED_FORMATS.map((format) => (
+                      <Option key={format.value} value={format.value}>
+                        {format.label}
+                      </Option>
+                    ))}
+                  </Select>
                 </div>
-              </div>
-            )}
 
-            <Button
-              type="primary"
-              onClick={convertImage}
-              loading={loading}
-              disabled={!originalImageUrl}
-              className="w-full bg-primary-blue hover:bg-primary-blue-dark"
-              size="large"
-            >
-              Convert Image
-            </Button>
+                {supportsQuality && (
+                  <div>
+                    <Text className="text-gray-900 dark:text-white text-sm font-medium mb-2 block">
+                      Quality: {Math.round(quality * 100)}%
+                    </Text>
+                    <Slider
+                      min={0.1}
+                      max={1}
+                      step={0.01}
+                      value={quality}
+                      onChange={setQuality}
+                      tooltip={{ formatter: (value) => `${Math.round((value || 0) * 100)}%` }}
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 dark:text-white/40 mt-1">
+                      <span>Lower size</span>
+                      <span>Higher quality</span>
+                    </div>
+                  </div>
+                )}
 
+                <Button
+                  type="primary"
+                  onClick={convertImage}
+                  loading={loading}
+                  disabled={!originalImageUrl}
+                  className="w-full bg-primary-blue hover:bg-primary-blue-dark"
+                  size="large"
+                >
+                  Convert Image
+                </Button>
+              </Space>
+            </div>
             {convertedImageUrl && (
               <>
                 <div>

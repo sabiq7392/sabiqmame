@@ -17,7 +17,7 @@ export default function JSONBeautifierPage() {
   return (
     <main className="min-h-screen w-full relative pt-24">
       <Navbar />
-      <div className="w-full min-h-[calc(100vh-96px)] p-8 md:p-4">
+      <div className="w-full min-h-[calc(100vh-96px)] p-8 md:p-4 max-w-[1200px] mx-auto">
         <JSONBeautifier />
       </div>
     </main>
