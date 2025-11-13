@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Card, Typography, Input, Button, Space, Alert, Tabs } from 'antd'
 import { SwapOutlined, ClearOutlined, CopyOutlined } from '@ant-design/icons'
 import ReactJson from 'react-json-view'
@@ -8,6 +8,9 @@ import { useTheme } from '@/contexts/ThemeContext'
 
 const { Title, Text } = Typography
 const { TextArea } = Input
+
+const STORAGE_KEY_JSON1 = 'json-diff-input-1'
+const STORAGE_KEY_JSON2 = 'json-diff-input-2'
 
 interface DiffResult {
   added: string[]
@@ -28,6 +31,58 @@ export default function JSONDiff() {
   const [parsedJson2, setParsedJson2] = useState<any>(null)
   const formatTimeoutRef1 = useRef<NodeJS.Timeout | null>(null)
   const formatTimeoutRef2 = useRef<NodeJS.Timeout | null>(null)
+  const isInitialMount = useRef(true)
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved1 = localStorage.getItem(STORAGE_KEY_JSON1)
+      const saved2 = localStorage.getItem(STORAGE_KEY_JSON2)
+      if (saved1) {
+        setJson1(saved1)
+      }
+      if (saved2) {
+        setJson2(saved2)
+      }
+    } catch (e) {
+      console.error('Failed to load from localStorage:', e)
+    }
+  }, [])
+
+  // Save to localStorage whenever json1 changes (but not on initial mount)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+
+    try {
+      if (json1.trim()) {
+        localStorage.setItem(STORAGE_KEY_JSON1, json1)
+      } else {
+        localStorage.removeItem(STORAGE_KEY_JSON1)
+      }
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e)
+    }
+  }, [json1])
+
+  // Save to localStorage whenever json2 changes (but not on initial mount)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
+    try {
+      if (json2.trim()) {
+        localStorage.setItem(STORAGE_KEY_JSON2, json2)
+      } else {
+        localStorage.removeItem(STORAGE_KEY_JSON2)
+      }
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e)
+    }
+  }, [json2])
 
   const formatJSON = (jsonString: string): string => {
     try {
@@ -116,6 +171,7 @@ export default function JSONDiff() {
     setError(null)
     setFormattedJson1('')
     setFormattedJson2('')
+    // localStorage will be updated automatically by useEffect when json1 and json2 change
   }
 
   const clearAll = () => {
@@ -127,6 +183,12 @@ export default function JSONDiff() {
     setFormattedJson2('')
     setParsedJson1(null)
     setParsedJson2(null)
+    try {
+      localStorage.removeItem(STORAGE_KEY_JSON1)
+      localStorage.removeItem(STORAGE_KEY_JSON2)
+    } catch (e) {
+      console.error('Failed to clear localStorage:', e)
+    }
   }
 
   const copyToClipboard = (text: string) => {

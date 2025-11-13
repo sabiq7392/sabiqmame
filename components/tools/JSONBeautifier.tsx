@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Card, Typography, Input, Button, Space, Alert } from 'antd'
 import { ClearOutlined, CopyOutlined } from '@ant-design/icons'
 import ReactJson from 'react-json-view'
@@ -10,6 +10,188 @@ import { message } from 'antd'
 const { Title, Text } = Typography
 const { TextArea } = Input
 
+const STORAGE_KEY = 'json-beautifier-input'
+
+const tryParseJSON = (text: string): any | null => {
+  if (!text.trim()) return null
+
+  const trimmed = text.trim()
+
+  // Try 1: Parse langsung sebagai JSON object
+  try {
+    const parsed = JSON.parse(trimmed)
+    // Jika hasilnya adalah object/array, return langsung
+    if (typeof parsed === 'object' && parsed !== null) {
+      return parsed
+    }
+    // Jika hasilnya string, coba parse lagi (double stringified)
+    if (typeof parsed === 'string') {
+      try {
+        const doubleParsed = JSON.parse(parsed)
+        // Jika hasilnya object, return
+        if (typeof doubleParsed === 'object' && doubleParsed !== null) {
+          return doubleParsed
+        }
+        // Jika masih string, coba parse lagi (triple stringified)
+        if (typeof doubleParsed === 'string') {
+          return JSON.parse(doubleParsed)
+        }
+        return doubleParsed
+      } catch {
+        // String biasa, bukan JSON stringified
+        return null
+      }
+    }
+    return parsed
+  } catch {
+    // Try 2: Handle escaped JSON string (seperti {\"key\":\"value\"})
+    // Jika text dimulai dengan { atau [ tapi tidak bisa di-parse, kemungkinan ada escape characters
+    if ((trimmed.startsWith('{') || trimmed.startsWith('[')) && trimmed.includes('\\"')) {
+      try {
+        // Pendekatan: Wrap dengan quotes dulu, parse sebagai string, lalu parse lagi
+        // Ini handle case dimana JSON sudah di-stringify
+        const wrapped = `"${trimmed.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
+        try {
+          const stringValue = JSON.parse(wrapped)
+          if (typeof stringValue === 'string') {
+            return JSON.parse(stringValue)
+          }
+        } catch {
+          // Jika wrap dengan quotes gagal, coba unescape langsung
+          // Strategy: Unescape \" menjadi " dan handle nested JSON string
+          let cleaned = trimmed
+
+          // Step 1: Unescape escaped quotes: \" -> "
+          cleaned = cleaned.replace(/\\"/g, '"')
+
+          // Step 2: Handle other escape sequences
+          cleaned = cleaned
+            .replace(/\\n/g, '\n')
+            .replace(/\\r/g, '\r')
+            .replace(/\\t/g, '\t')
+            .replace(/\\b/g, '\b')
+            .replace(/\\f/g, '\f')
+            .replace(/\\\\/g, '\\')
+
+          // Step 3: Parse JSON - jika gagal karena nested JSON string, fix manual
+          try {
+            return JSON.parse(cleaned)
+          } catch (parseError: any) {
+            // Parse gagal - kemungkinan karena nested JSON string
+            // Fix: Escape quotes di dalam string values yang berisi JSON
+            // Gunakan parser manual untuk handle nested structures
+            let result = ''
+            let inString = false
+            let stringStartInResult = -1
+            let stringStartInCleaned = -1
+            let escapeNext = false
+            let isValue = false
+            let lastColonPos = -1
+
+            for (let i = 0; i < cleaned.length; i++) {
+              const char = cleaned[i]
+
+              if (escapeNext) {
+                result += char
+                escapeNext = false
+                continue
+              }
+
+              if (char === '\\') {
+                escapeNext = true
+                result += char
+                continue
+              }
+
+              if (char === '"') {
+                if (!inString) {
+                  // Start of string
+                  inString = true
+                  stringStartInResult = result.length
+                  stringStartInCleaned = i
+                  // Check if this is a value (after ":)
+                  isValue = lastColonPos > 0 && i > lastColonPos && cleaned.substring(lastColonPos, i).trim() === ':'
+                  result += char
+                } else {
+                  // End of string
+                  if (isValue) {
+                    // This is a string value - check if it contains JSON
+                    const stringContent = cleaned.substring(stringStartInCleaned + 1, i)
+                    if ((stringContent.includes('{') || stringContent.includes('[')) && stringContent.includes('"')) {
+                      // Escape quotes inside
+                      const escaped = stringContent.replace(/"/g, '\\"')
+                      // Replace the string content in result
+                      result = result.substring(0, stringStartInResult + 1) + escaped + char
+                    } else {
+                      result += char
+                    }
+                  } else {
+                    result += char
+                  }
+                  inString = false
+                  isValue = false
+                }
+              } else {
+                if (char === ':') {
+                  lastColonPos = i
+                }
+                result += char
+              }
+            }
+
+            try {
+              return JSON.parse(result)
+            } catch {
+              return null
+            }
+          }
+        }
+      } catch {
+        // Try 3: Handle case dimana text adalah string JSON yang di-wrap dengan quotes
+        try {
+          // Jika dimulai dan diakhiri dengan quote, remove outer quotes
+          if ((trimmed.startsWith('"') && trimmed.endsWith('"')) && trimmed.length > 1) {
+            let cleaned = trimmed.slice(1, -1)
+            // Unescape: \\" -> ", \\\\ -> \
+            cleaned = cleaned.replace(/\\\\/g, '\\').replace(/\\"/g, '"')
+            return JSON.parse(cleaned)
+          }
+        } catch {
+          return null
+        }
+      }
+    }
+
+    // Try 4: Jika text dimulai dengan quote, coba parse sebagai string lalu parse lagi
+    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) && trimmed.length > 1) {
+      try {
+        // Parse sebagai string JSON
+        const stringValue = JSON.parse(trimmed)
+        if (typeof stringValue === 'string') {
+          // Parse string tersebut sebagai JSON
+          return JSON.parse(stringValue)
+        }
+      } catch {
+        return null
+      }
+    }
+
+    return null
+  }
+}
+
+const formatJSON = (jsonString: string): string => {
+  try {
+    const parsed = tryParseJSON(jsonString)
+    if (parsed === null) {
+      return jsonString
+    }
+    return JSON.stringify(parsed, null, 2)
+  } catch {
+    return jsonString
+  }
+}
+
 export default function JSONBeautifier() {
   const { theme } = useTheme()
   const [inputJson, setInputJson] = useState('')
@@ -17,186 +199,47 @@ export default function JSONBeautifier() {
   const [parsedJson, setParsedJson] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const formatTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isInitialMount = useRef(true)
 
-  const tryParseJSON = (text: string): any | null => {
-    if (!text.trim()) return null
-
-    const trimmed = text.trim()
-
-    // Try 1: Parse langsung sebagai JSON object
+  // Load from localStorage on mount
+  useEffect(() => {
     try {
-      const parsed = JSON.parse(trimmed)
-      // Jika hasilnya adalah object/array, return langsung
-      if (typeof parsed === 'object' && parsed !== null) {
-        return parsed
-      }
-      // Jika hasilnya string, coba parse lagi (double stringified)
-      if (typeof parsed === 'string') {
-        try {
-          const doubleParsed = JSON.parse(parsed)
-          // Jika hasilnya object, return
-          if (typeof doubleParsed === 'object' && doubleParsed !== null) {
-            return doubleParsed
-          }
-          // Jika masih string, coba parse lagi (triple stringified)
-          if (typeof doubleParsed === 'string') {
-            return JSON.parse(doubleParsed)
-          }
-          return doubleParsed
-        } catch {
-          // String biasa, bukan JSON stringified
-          return null
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        setInputJson(saved)
+        // Trigger formatting for saved input
+        const parsed = tryParseJSON(saved)
+        if (parsed !== null) {
+          setParsedJson(parsed)
+          const formatted = JSON.stringify(parsed, null, 2)
+          setFormattedJson(formatted)
+        } else {
+          setParsedJson(null)
+          setFormattedJson('')
         }
       }
-      return parsed
-    } catch {
-      // Try 2: Handle escaped JSON string (seperti {\"key\":\"value\"})
-      // Jika text dimulai dengan { atau [ tapi tidak bisa di-parse, kemungkinan ada escape characters
-      if ((trimmed.startsWith('{') || trimmed.startsWith('[')) && trimmed.includes('\\"')) {
-        try {
-          // Pendekatan: Wrap dengan quotes dulu, parse sebagai string, lalu parse lagi
-          // Ini handle case dimana JSON sudah di-stringify
-          const wrapped = `"${trimmed.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
-          try {
-            const stringValue = JSON.parse(wrapped)
-            if (typeof stringValue === 'string') {
-              return JSON.parse(stringValue)
-            }
-          } catch {
-            // Jika wrap dengan quotes gagal, coba unescape langsung
-            // Strategy: Unescape \" menjadi " dan handle nested JSON string
-            let cleaned = trimmed
-
-            // Step 1: Unescape escaped quotes: \" -> "
-            cleaned = cleaned.replace(/\\"/g, '"')
-
-            // Step 2: Handle other escape sequences
-            cleaned = cleaned
-              .replace(/\\n/g, '\n')
-              .replace(/\\r/g, '\r')
-              .replace(/\\t/g, '\t')
-              .replace(/\\b/g, '\b')
-              .replace(/\\f/g, '\f')
-              .replace(/\\\\/g, '\\')
-
-            // Step 3: Parse JSON - jika gagal karena nested JSON string, fix manual
-            try {
-              return JSON.parse(cleaned)
-            } catch (parseError: any) {
-              // Parse gagal - kemungkinan karena nested JSON string
-              // Fix: Escape quotes di dalam string values yang berisi JSON
-              // Gunakan parser manual untuk handle nested structures
-              let result = ''
-              let inString = false
-              let stringStartInResult = -1
-              let stringStartInCleaned = -1
-              let escapeNext = false
-              let isValue = false
-              let lastColonPos = -1
-
-              for (let i = 0; i < cleaned.length; i++) {
-                const char = cleaned[i]
-
-                if (escapeNext) {
-                  result += char
-                  escapeNext = false
-                  continue
-                }
-
-                if (char === '\\') {
-                  escapeNext = true
-                  result += char
-                  continue
-                }
-
-                if (char === '"') {
-                  if (!inString) {
-                    // Start of string
-                    inString = true
-                    stringStartInResult = result.length
-                    stringStartInCleaned = i
-                    // Check if this is a value (after ":)
-                    isValue = lastColonPos > 0 && i > lastColonPos && cleaned.substring(lastColonPos, i).trim() === ':'
-                    result += char
-                  } else {
-                    // End of string
-                    if (isValue) {
-                      // This is a string value - check if it contains JSON
-                      const stringContent = cleaned.substring(stringStartInCleaned + 1, i)
-                      if ((stringContent.includes('{') || stringContent.includes('[')) && stringContent.includes('"')) {
-                        // Escape quotes inside
-                        const escaped = stringContent.replace(/"/g, '\\"')
-                        // Replace the string content in result
-                        result = result.substring(0, stringStartInResult + 1) + escaped + char
-                      } else {
-                        result += char
-                      }
-                    } else {
-                      result += char
-                    }
-                    inString = false
-                    isValue = false
-                  }
-                } else {
-                  if (char === ':') {
-                    lastColonPos = i
-                  }
-                  result += char
-                }
-              }
-
-              try {
-                return JSON.parse(result)
-              } catch {
-                return null
-              }
-            }
-          }
-        } catch {
-          // Try 3: Handle case dimana text adalah string JSON yang di-wrap dengan quotes
-          try {
-            // Jika dimulai dan diakhiri dengan quote, remove outer quotes
-            if ((trimmed.startsWith('"') && trimmed.endsWith('"')) && trimmed.length > 1) {
-              let cleaned = trimmed.slice(1, -1)
-              // Unescape: \\" -> ", \\\\ -> \
-              cleaned = cleaned.replace(/\\\\/g, '\\').replace(/\\"/g, '"')
-              return JSON.parse(cleaned)
-            }
-          } catch {
-            return null
-          }
-        }
-      }
-
-      // Try 4: Jika text dimulai dengan quote, coba parse sebagai string lalu parse lagi
-      if ((trimmed.startsWith('"') && trimmed.endsWith('"')) && trimmed.length > 1) {
-        try {
-          // Parse sebagai string JSON
-          const stringValue = JSON.parse(trimmed)
-          if (typeof stringValue === 'string') {
-            // Parse string tersebut sebagai JSON
-            return JSON.parse(stringValue)
-          }
-        } catch {
-          return null
-        }
-      }
-
-      return null
+    } catch (e) {
+      console.error('Failed to load from localStorage:', e)
     }
-  }
+  }, [])
 
-  const formatJSON = (jsonString: string): string => {
+  // Save to localStorage whenever inputJson changes (but not on initial mount)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
     try {
-      const parsed = tryParseJSON(jsonString)
-      if (parsed === null) {
-        return jsonString
+      if (inputJson.trim()) {
+        localStorage.setItem(STORAGE_KEY, inputJson)
+      } else {
+        localStorage.removeItem(STORAGE_KEY)
       }
-      return JSON.stringify(parsed, null, 2)
-    } catch {
-      return jsonString
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e)
     }
-  }
+  }, [inputJson])
 
   const handleJSONInput = (value: string) => {
     setInputJson(value)
@@ -277,6 +320,11 @@ export default function JSONBeautifier() {
     setFormattedJson('')
     setParsedJson(null)
     setError(null)
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch (e) {
+      console.error('Failed to clear localStorage:', e)
+    }
     if (formatTimeoutRef.current) {
       clearTimeout(formatTimeoutRef.current)
     }
