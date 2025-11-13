@@ -227,8 +227,9 @@ export default function ImageConverter() {
                   <Select
                     value={outputFormat}
                     onChange={setOutputFormat}
-                    className="w-full"
+                    className="w-full [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selection-item]:!text-white dark:[&_.ant-select-selector]:!bg-white/5 dark:[&_.ant-select-selection-item]:!text-white dark:[&_.ant-select-selection-item]:!opacity-100"
                     size="large"
+                    popupClassName="dark:[&_.ant-select-item-option-selected]:!text-white dark:[&_.ant-select-item-option-selected]:!bg-primary-blue/30"
                   >
                     {SUPPORTED_FORMATS.map((format) => (
                       <Option key={format.value} value={format.value}>
@@ -276,7 +277,7 @@ export default function ImageConverter() {
                   <Text className="text-gray-900 dark:text-white text-sm font-semibold mb-2 block">
                     Converted Image:
                   </Text>
-                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20">
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 grid place-items-center">
                     <Image
                       src={convertedImageUrl}
                       alt="Converted"
