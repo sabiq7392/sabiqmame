@@ -11,7 +11,8 @@ import {
   LockOutlined,
   TableOutlined,
   KeyOutlined,
-  ClockCircleOutlined
+  ClockCircleOutlined,
+  BgColorsOutlined
 } from '@ant-design/icons'
 
 const { Text } = Typography
@@ -94,6 +95,13 @@ export const toolItems: Tool[] = [
     description: 'Convert, format, and calculate dates and times with ease',
     icon: <ClockCircleOutlined />,
     href: '/tools/datetime-converter',
+  },
+  {
+    id: 'colors',
+    name: 'Colors Tools',
+    description: 'Pick colors, generate palettes, create gradients, and convert color formats',
+    icon: <BgColorsOutlined />,
+    href: '/tools/colors',
   }
 ]
 
