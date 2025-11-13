@@ -5,6 +5,7 @@ import StyledComponentsRegistry from '@/lib/AntdRegistry'
 import ThemeWrapper from '@/components/ThemeWrapper'
 import NextTopLoader from 'nextjs-toploader'
 import Navbar from '@/components/Navbar'
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -97,6 +98,7 @@ export default function RootLayout({
             </div>
           </ThemeWrapper>
         </StyledComponentsRegistry>
+        <Analytics />
       </body>
     </html>
   )

@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Typography, Input, Button, Space, Radio, Alert, Image } from 'antd'
-import { ClearOutlined, CopyOutlined, SwapOutlined, DownloadOutlined } from '@ant-design/icons'
+import { Typography, Input, Button, Space, Radio, Alert, Image, Upload, Tabs } from 'antd'
+import { ClearOutlined, CopyOutlined, SwapOutlined, DownloadOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons'
 import { message } from 'antd'
+import type { UploadFile, UploadProps } from 'antd'
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -69,6 +70,8 @@ export default function Base64Encoder() {
   const [isImageOutput, setIsImageOutput] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [mimeType, setMimeType] = useState<string>('image/png')
+  const [inputMode, setInputMode] = useState<'text' | 'file'>('text')
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -232,6 +235,47 @@ export default function Base64Encoder() {
     setInput(value)
   }
 
+  const handleFileUpload: UploadProps['beforeUpload'] = (file) => {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const result = e.target?.result as string
+      if (result) {
+        setInput(result)
+        setUploadedFile(file)
+
+        // Check if file is an image
+        if (file.type.startsWith('image/')) {
+          setIsImageInput(true)
+          setImagePreview(result)
+          setMimeType(file.type)
+        } else {
+          setIsImageInput(false)
+          setImagePreview(null)
+          setMimeType(file.type || 'application/octet-stream')
+        }
+
+        message.success(`File "${file.name}" loaded successfully!`)
+      }
+    }
+
+    reader.onerror = () => {
+      message.error('Failed to read file')
+    }
+
+    // Read file as data URL (Base64)
+    reader.readAsDataURL(file)
+    return false // Prevent auto upload
+  }
+
+  const handleFileRemove = () => {
+    setUploadedFile(null)
+    setInput('')
+    setIsImageInput(false)
+    setImagePreview(null)
+    setMimeType('image/png')
+  }
+
   const handleModeChange = (newMode: Mode) => {
     setMode(newMode)
     // Swap input and output when changing mode
@@ -303,6 +347,7 @@ export default function Base64Encoder() {
     setIsImageOutput(false)
     setImagePreview(null)
     setMimeType('image/png')
+    setUploadedFile(null)
     try {
       localStorage.removeItem(STORAGE_KEY)
     } catch (e) {
@@ -372,7 +417,7 @@ export default function Base64Encoder() {
         <div className="rounded-2xl glass-strong p-6">
           <div className="mb-4 flex items-center justify-between">
             <Title level={4} className="!m-0 text-gray-900 dark:text-white text-lg font-semibold">
-              {mode === 'encode' ? 'Text Input' : isImageInput ? 'Base64 Image Input' : 'Base64 Input'}
+              {mode === 'encode' ? 'Input' : isImageInput ? 'Base64 Image Input' : 'Base64 Input'}
             </Title>
             <Space>
               <Button
@@ -395,45 +440,142 @@ export default function Base64Encoder() {
             </Space>
           </div>
 
-          {mode === 'decode' && isImageInput && isBase64Image(input.trim()) ? (
-            <div className="space-y-4">
-              <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 bg-white dark:bg-[#1e1e1e] p-4">
-                <Image
-                  src={input.trim()}
-                  alt="Base64 Image Input Preview"
-                  className="max-w-full"
-                  preview={{
-                    mask: 'Preview Image'
-                  }}
-                />
-              </div>
-              <TextArea
-                value={input}
-                onChange={(e) => handleInputChange(e.target.value)}
-                placeholder="Enter Base64 image string (data:image/...;base64,...) or plain Base64..."
-                rows={8}
-                className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
-                style={{ resize: 'vertical' }}
+          {/* Input Mode Tabs */}
+          {mode === 'encode' && (
+            <div className="mb-4">
+              <Tabs
+                activeKey={inputMode}
+                onChange={(key) => {
+                  setInputMode(key as 'text' | 'file')
+                  if (key === 'text') {
+                    setUploadedFile(null)
+                  }
+                }}
+                items={[
+                  {
+                    key: 'text',
+                    label: 'Text Input',
+                  },
+                  {
+                    key: 'file',
+                    label: 'File Upload',
+                  },
+                ]}
+                size="small"
               />
             </div>
-          ) : (
-            <TextArea
-              value={input}
-              onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={mode === 'encode' ? 'Enter text to encode or paste Base64 image (data:image/...;base64,...)...' : 'Enter Base64 string to decode or paste Base64 image...'}
-              rows={15}
-              className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
-              style={{ resize: 'vertical' }}
-            />
           )}
 
-          {input && (
-            <div className="mt-2">
-              <Text className="text-gray-500 dark:text-white/40 text-xs">
-                Length: {input.length} characters
-                {isImageInput && mode === 'decode' && ' (Image detected)'}
-              </Text>
+          {/* File Upload Section */}
+          {mode === 'encode' && inputMode === 'file' ? (
+            <div className="space-y-4">
+              <Upload.Dragger
+                beforeUpload={handleFileUpload}
+                onRemove={handleFileRemove}
+                maxCount={1}
+                height={270}
+                accept="*/*"
+                className="w-full"
+              >
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                <p className="text-gray-600 dark:text-white/60 text-sm">
+                  Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+                  banned files.
+                </p>
+              </Upload.Dragger>
+
+              {uploadedFile && (
+                <div className="p-3 rounded-lg bg-white/60 dark:bg-white/5 border border-gray-200 dark:border-white/20">
+                  <Text className="text-gray-900 dark:text-white text-sm">
+                    <strong>File:</strong> {uploadedFile.name}
+                  </Text>
+                  <br />
+                  <Text className="text-gray-600 dark:text-white/60 text-xs">
+                    Size: {(uploadedFile.size / 1024).toFixed(2)} KB | Type: {uploadedFile.type || 'Unknown'}
+                  </Text>
+                </div>
+              )}
+
+              {uploadedFile && uploadedFile.type.startsWith('image/') && imagePreview && (
+                <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 bg-white dark:bg-[#1e1e1e] p-4">
+                  <Image
+                    src={imagePreview}
+                    alt="Uploaded Image Preview"
+                    className="max-w-full"
+                    preview={{
+                      mask: 'Preview Image'
+                    }}
+                  />
+                </div>
+              )}
+
+              {input && (
+                <div>
+                  <Text className="text-gray-900 dark:text-white text-sm font-medium mb-2 block">
+                    Base64 Data URI:
+                  </Text>
+                  <TextArea
+                    value={input}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    placeholder="Base64 data URI will appear here after file upload..."
+                    rows={8}
+                    className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
+                    style={{ resize: 'vertical' }}
+                  />
+                  <div className="mt-2">
+                    <Text className="text-gray-500 dark:text-white/40 text-xs">
+                      Length: {input.length} characters
+                    </Text>
+                  </div>
+                </div>
+              )}
             </div>
+          ) : (
+            <>
+              {mode === 'decode' && isImageInput && isBase64Image(input.trim()) ? (
+                <div className="space-y-4">
+                  <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 bg-white dark:bg-[#1e1e1e] p-4">
+                    <Image
+                      src={input.trim()}
+                      alt="Base64 Image Input Preview"
+                      className="max-w-full"
+                      preview={{
+                        mask: 'Preview Image'
+                      }}
+                    />
+                  </div>
+                  <TextArea
+                    value={input}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    placeholder="Enter Base64 image string (data:image/...;base64,...) or plain Base64..."
+                    rows={8}
+                    className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+              ) : (
+                <TextArea
+                  value={input}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  placeholder={mode === 'encode' ? 'Enter text to encode or paste Base64 image (data:image/...;base64,...)...' : 'Enter Base64 string to decode or paste Base64 image...'}
+                  rows={15}
+                  className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
+                  style={{ resize: 'vertical' }}
+                />
+              )}
+
+              {input && (
+                <div className="mt-2">
+                  <Text className="text-gray-500 dark:text-white/40 text-xs">
+                    Length: {input.length} characters
+                    {isImageInput && mode === 'decode' && ' (Image detected)'}
+                  </Text>
+                </div>
+              )}
+            </>
           )}
         </div>
 
