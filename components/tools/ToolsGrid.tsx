@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, Typography } from 'antd'
-import { FileTextOutlined, FileImageOutlined, DiffOutlined, CodeOutlined } from '@ant-design/icons'
+import { FileTextOutlined, FileImageOutlined, DiffOutlined, CodeOutlined, EditOutlined, LockOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 
 const { Title } = Typography
@@ -49,6 +49,20 @@ const tools: Tool[] = [
     description: 'Get a random image from the internet',
     icon: <img src="/icon/random-image.png" alt="Random Image" />,
     href: '/tools/random-image',
+  },
+  {
+    id: 'markdown-preview',
+    name: 'Markdown Preview',
+    description: 'Write Markdown and see live preview with GFM support',
+    icon: <img src="/icon/markdown.png" alt="Markdown Preview" />,
+    href: '/tools/markdown-preview',
+  },
+  {
+    id: 'password-generator',
+    name: 'Password Generator',
+    description: 'Generate secure, random passwords with customizable options',
+    icon: <LockOutlined />,
+    href: '/tools/password-generator',
   }
 ]
 
