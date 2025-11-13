@@ -1,6 +1,6 @@
 'use client'
 
-import { Menu, Button } from 'antd'
+import { Button } from 'antd'
 import { HomeOutlined, ToolOutlined, SunOutlined, MoonOutlined, AppstoreOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -9,18 +9,21 @@ import { useTheme } from '@/contexts/ThemeContext'
 const menuItems = [
   {
     key: '/',
-    icon: <HomeOutlined />,
-    label: <Link href="/">Home</Link>,
+    href: '/',
+    icon: HomeOutlined,
+    label: 'Home',
   },
   {
     key: '/tools',
-    icon: <ToolOutlined />,
-    label: <Link href="/tools">My Tools</Link>,
+    href: '/tools',
+    icon: ToolOutlined,
+    label: 'My Tools',
   },
   {
     key: '/gallery',
-    icon: <AppstoreOutlined />,
-    label: <Link href="/gallery">Just Gallery</Link>,
+    href: '/gallery',
+    icon: AppstoreOutlined,
+    label: 'Just Gallery',
   },
 ]
 
@@ -39,7 +42,7 @@ export default function Navbar() {
                 <img
                   src="/me/logo.svg"
                   alt="Logo"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover bg-white"
                 />
               </div>
               <span className="text-base md:text-lg font-semibold text-gray-900 dark:text-white hidden sm:block">
@@ -48,16 +51,34 @@ export default function Navbar() {
             </Link>
 
             {/* Menu Section */}
-            <div className="flex-1 flex justify-end items-center gap-2 md:gap-3 min-w-0">
-              {/* Scrollable Menu Container for Mobile */}
-              <div className="flex-1 overflow-x-auto overflow-y-hidden scrollbar-hide md:scrollbar-default -mx-2 px-2 md:mx-0 md:px-0">
-                <Menu
-                  mode="horizontal"
-                  selectedKeys={[pathname || '/']}
-                  items={menuItems}
-                  className="!bg-transparent !border-none [&_.ant-menu-horizontal]:!border-none [&_.ant-menu-horizontal]:!flex [&_.ant-menu-horizontal]:!nowrap [&_.ant-menu-item]:!mx-0.5 md:[&_.ant-menu-item]:!mx-1 [&_.ant-menu-item]:!rounded-xl [&_.ant-menu-item]:!px-3 md:[&_.ant-menu-item]:!px-5 [&_.ant-menu-item]:!h-10 [&_.ant-menu-item]:!flex [&_.ant-menu-item]:!items-center [&_.ant-menu-item-selected]:!bg-primary-blue/30 [&_.ant-menu-item-selected]:!text-primary-blue-light [&_.ant-menu-item-selected]:!border-none [&_.ant-menu-item-selected>a]:!text-primary-blue-light [&_.ant-menu-item]:!text-gray-700 dark:[&_.ant-menu-item]:!text-white/70 [&_.ant-menu-item>a]:!text-gray-700 dark:[&_.ant-menu-item>a]:!text-white/70 [&_.ant-menu-item:hover]:!bg-primary-blue/20 [&_.ant-menu-item:hover]:!text-gray-900 dark:[&_.ant-menu-item:hover]:!text-white [&_.ant-menu-item:hover>a]:!text-gray-900 dark:[&_.ant-menu-item:hover>a]:!text-white [&_.ant-menu-item]:!transition-all [&_.ant-menu-item]:!duration-300"
-                />
-              </div>
+            <div className="flex-1 flex justify-evenly md:justify-end items-center gap-2 md:gap-3 min-w-0">
+              {/* Custom Menu */}
+              <nav className="flex items-center justify-evenly md:justify-start gap-0.5 md:gap-1 flex-1 md:flex-none">
+                {menuItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = pathname === item.key
+
+                  return (
+                    <Link
+                      key={item.key}
+                      href={item.href}
+                      className={`
+                        flex items-center justify-center gap-1.5 md:gap-2
+                        h-10 px-3 md:px-5 rounded-xl
+                        transition-all duration-300
+                        text-sm
+                        ${isActive
+                          ? 'bg-primary-blue/30'
+                          : 'text-gray-700 dark:text-white/70 hover:bg-primary-blue/20 hover:text-gray-900 dark:hover:text-white'
+                        }
+                      `}
+                    >
+                      <Icon />
+                      <span className="hidden md:inline">{item.label}</span>
+                    </Link>
+                  )
+                })}
+              </nav>
 
               {/* Theme Toggle Button */}
               <Button
