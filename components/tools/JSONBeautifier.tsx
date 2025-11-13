@@ -3,9 +3,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Card, Typography, Input, Button, Space, Alert } from 'antd'
 import { ClearOutlined, CopyOutlined } from '@ant-design/icons'
-import ReactJson from 'react-json-view'
+import dynamic from 'next/dynamic'
 import { useTheme } from '@/contexts/ThemeContext'
 import { message } from 'antd'
+
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -198,11 +200,19 @@ export default function JSONBeautifier() {
   const [formattedJson, setFormattedJson] = useState('')
   const [parsedJson, setParsedJson] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
   const formatTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isInitialMount = useRef(true)
 
+  // Track if component is mounted (client-side only)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Load from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
@@ -225,6 +235,8 @@ export default function JSONBeautifier() {
 
   // Save to localStorage whenever inputJson changes (but not on initial mount)
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     if (isInitialMount.current) {
       isInitialMount.current = false
       return
@@ -320,10 +332,12 @@ export default function JSONBeautifier() {
     setFormattedJson('')
     setParsedJson(null)
     setError(null)
-    try {
-      localStorage.removeItem(STORAGE_KEY)
-    } catch (e) {
-      console.error('Failed to clear localStorage:', e)
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(STORAGE_KEY)
+      } catch (e) {
+        console.error('Failed to clear localStorage:', e)
+      }
     }
     if (formatTimeoutRef.current) {
       clearTimeout(formatTimeoutRef.current)
@@ -397,7 +411,7 @@ export default function JSONBeautifier() {
             </Button>
           </div>
           <div className="relative">
-            {parsedJson ? (
+            {mounted && parsedJson ? (
               <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-white/20 bg-white dark:bg-[#1e1e1e]">
                 <div style={{ maxHeight: '600px', overflow: 'auto', padding: '16px' }}>
                   <ReactJson

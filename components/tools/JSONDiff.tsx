@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { Card, Typography, Input, Button, Space, Alert, Tabs } from 'antd'
 import { SwapOutlined, ClearOutlined, CopyOutlined } from '@ant-design/icons'
-import ReactJson from 'react-json-view'
+import dynamic from 'next/dynamic'
 import { useTheme } from '@/contexts/ThemeContext'
+
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -29,12 +31,20 @@ export default function JSONDiff() {
   const [formattedJson2, setFormattedJson2] = useState('')
   const [parsedJson1, setParsedJson1] = useState<any>(null)
   const [parsedJson2, setParsedJson2] = useState<any>(null)
+  const [mounted, setMounted] = useState(false)
   const formatTimeoutRef1 = useRef<NodeJS.Timeout | null>(null)
   const formatTimeoutRef2 = useRef<NodeJS.Timeout | null>(null)
   const isInitialMount = useRef(true)
 
+  // Track if component is mounted (client-side only)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Load from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     try {
       const saved1 = localStorage.getItem(STORAGE_KEY_JSON1)
       const saved2 = localStorage.getItem(STORAGE_KEY_JSON2)
@@ -51,6 +61,8 @@ export default function JSONDiff() {
 
   // Save to localStorage whenever json1 changes (but not on initial mount)
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     if (isInitialMount.current) {
       return
     }
@@ -68,6 +80,8 @@ export default function JSONDiff() {
 
   // Save to localStorage whenever json2 changes (but not on initial mount)
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     if (isInitialMount.current) {
       isInitialMount.current = false
       return
@@ -183,11 +197,13 @@ export default function JSONDiff() {
     setFormattedJson2('')
     setParsedJson1(null)
     setParsedJson2(null)
-    try {
-      localStorage.removeItem(STORAGE_KEY_JSON1)
-      localStorage.removeItem(STORAGE_KEY_JSON2)
-    } catch (e) {
-      console.error('Failed to clear localStorage:', e)
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(STORAGE_KEY_JSON1)
+        localStorage.removeItem(STORAGE_KEY_JSON2)
+      } catch (e) {
+        console.error('Failed to clear localStorage:', e)
+      }
     }
   }
 
@@ -563,7 +579,7 @@ export default function JSONDiff() {
                           </Button>
                         </div>
                         <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e] max-h-[600px] overflow-y-auto">
-                          {parsedJson1 ? (
+                          {mounted && parsedJson1 ? (
                             <ReactJson
                               src={parsedJson1}
                               theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
@@ -614,7 +630,7 @@ export default function JSONDiff() {
                           </Button>
                         </div>
                         <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e] max-h-[600px] overflow-y-auto">
-                          {parsedJson2 ? (
+                          {mounted && parsedJson2 ? (
                             <ReactJson
                               src={parsedJson2}
                               theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
@@ -751,7 +767,7 @@ export default function JSONDiff() {
                       </Button>
                     </div>
                     <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e]">
-                      {parsedJson1 ? (
+                      {mounted && parsedJson1 ? (
                         <ReactJson
                           src={parsedJson1}
                           theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
@@ -803,7 +819,7 @@ export default function JSONDiff() {
                       </Button>
                     </div>
                     <div className="rounded-xl overflow-hidden p-4 bg-white dark:bg-[#1e1e1e]">
-                      {parsedJson2 ? (
+                      {mounted && parsedJson2 ? (
                         <ReactJson
                           src={parsedJson2}
                           theme={theme === 'dark' ? 'monokai' : 'rjv-default'}
