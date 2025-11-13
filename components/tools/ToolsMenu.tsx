@@ -9,7 +9,8 @@ import {
   CodeOutlined,
   EditOutlined,
   LockOutlined,
-  TableOutlined
+  TableOutlined,
+  KeyOutlined
 } from '@ant-design/icons'
 
 const { Text } = Typography
@@ -78,6 +79,13 @@ export const toolItems: Tool[] = [
     description: 'Convert JSON arrays to CSV format with nested object support',
     icon: <TableOutlined />,
     href: '/tools/json-to-csv',
+  },
+  {
+    id: 'base64-encoder',
+    name: 'Base64 Encoder',
+    description: 'Encode text to Base64 or decode Base64 to text instantly',
+    icon: <KeyOutlined />,
+    href: '/tools/base64-encoder',
   }
 ]
 
