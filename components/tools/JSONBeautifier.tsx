@@ -20,9 +20,9 @@ export default function JSONBeautifier() {
 
   const tryParseJSON = (text: string): any | null => {
     if (!text.trim()) return null
-    
+
     const trimmed = text.trim()
-    
+
     // Try 1: Parse langsung sebagai JSON object
     try {
       const parsed = JSON.parse(trimmed)
@@ -66,10 +66,10 @@ export default function JSONBeautifier() {
             // Jika wrap dengan quotes gagal, coba unescape langsung
             // Strategy: Unescape \" menjadi " dan handle nested JSON string
             let cleaned = trimmed
-            
+
             // Step 1: Unescape escaped quotes: \" -> "
             cleaned = cleaned.replace(/\\"/g, '"')
-            
+
             // Step 2: Handle other escape sequences
             cleaned = cleaned
               .replace(/\\n/g, '\n')
@@ -78,7 +78,7 @@ export default function JSONBeautifier() {
               .replace(/\\b/g, '\b')
               .replace(/\\f/g, '\f')
               .replace(/\\\\/g, '\\')
-            
+
             // Step 3: Parse JSON - jika gagal karena nested JSON string, fix manual
             try {
               return JSON.parse(cleaned)
@@ -93,22 +93,22 @@ export default function JSONBeautifier() {
               let escapeNext = false
               let isValue = false
               let lastColonPos = -1
-              
+
               for (let i = 0; i < cleaned.length; i++) {
                 const char = cleaned[i]
-                
+
                 if (escapeNext) {
                   result += char
                   escapeNext = false
                   continue
                 }
-                
+
                 if (char === '\\') {
                   escapeNext = true
                   result += char
                   continue
                 }
-                
+
                 if (char === '"') {
                   if (!inString) {
                     // Start of string
@@ -144,7 +144,7 @@ export default function JSONBeautifier() {
                   result += char
                 }
               }
-              
+
               try {
                 return JSON.parse(result)
               } catch {
@@ -167,7 +167,7 @@ export default function JSONBeautifier() {
           }
         }
       }
-      
+
       // Try 4: Jika text dimulai dengan quote, coba parse sebagai string lalu parse lagi
       if ((trimmed.startsWith('"') && trimmed.endsWith('"')) && trimmed.length > 1) {
         try {
@@ -181,7 +181,7 @@ export default function JSONBeautifier() {
           return null
         }
       }
-      
+
       return null
     }
   }
@@ -201,19 +201,19 @@ export default function JSONBeautifier() {
   const handleJSONInput = (value: string) => {
     setInputJson(value)
     setError(null)
-    
+
     // Clear previous timeout
     if (formatTimeoutRef.current) {
       clearTimeout(formatTimeoutRef.current)
     }
-    
+
     // Debounce formatting
     formatTimeoutRef.current = setTimeout(() => {
       if (!value.trim()) {
         setFormattedJson('')
         return
       }
-      
+
       try {
         const formatted = formatJSON(value)
         setFormattedJson(formatted)
@@ -226,19 +226,19 @@ export default function JSONBeautifier() {
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const pastedText = e.clipboardData.getData('text')
-    
+
     // Clear previous timeout
     if (formatTimeoutRef.current) {
       clearTimeout(formatTimeoutRef.current)
     }
-    
+
     // Immediately format on paste
     setTimeout(() => {
       if (!pastedText.trim()) {
         setFormattedJson('')
         return
       }
-      
+
       try {
         const formatted = formatJSON(pastedText)
         setFormattedJson(formatted)
@@ -266,7 +266,7 @@ export default function JSONBeautifier() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto fade-in">
+    <div className="max-w-[1400px] mx-auto">
       <div className="mb-8">
         <Title level={1} className="!m-0 text-gray-900 dark:text-white text-4xl md:text-3xl font-bold mb-4">
           JSON Beautifier
@@ -290,7 +290,7 @@ export default function JSONBeautifier() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Input Section */}
-        <Card className="rounded-2xl glass">
+        <div className="rounded-2xl glass-strong p-6">
           <div className="mb-4 flex items-center justify-between">
             <Title level={4} className="!m-0 text-gray-900 dark:text-white text-lg font-semibold">
               Input JSON
@@ -313,7 +313,7 @@ export default function JSONBeautifier() {
             className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
             style={{ resize: 'vertical' }}
           />
-        </Card>
+        </div>
 
         {/* Formatted Output Section */}
         <Card className="rounded-2xl glass">
