@@ -18,7 +18,7 @@ export default function HeroSection() {
 
   return (
     <section className="w-full flex justify-center py-8 md:py-4 fade-in">
-      <div className="w-full max-w-[800px] px-12 py-16 md:px-6 md:py-10 rounded-3xl text-center flex flex-col items-center gap-6 md:gap-4 glass-strong">
+      <div className="w-full px-12 py-16 md:px-6 md:py-10 rounded-3xl text-center flex flex-col items-center gap-6 md:gap-4 glass-strong">
         <Avatar
           size={120}
           className="border-[3px] border-primary-blue/50 dark:shadow-[0_0_30px_rgba(59,130,246,0.3)]"

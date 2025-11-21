@@ -1,9 +1,7 @@
 'use client'
 
 import HeroSection from './sections/HeroSection'
-import AboutSection from './sections/AboutSection'
 import SkillsSection from './sections/SkillsSection'
-import ProjectsSection from './sections/ProjectsSection'
 import EducationSection from './sections/EducationSection'
 import ExperienceSection from './sections/ExperienceSection'
 
