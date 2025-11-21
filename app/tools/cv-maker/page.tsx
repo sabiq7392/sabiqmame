@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
 import CVMakerForm from '@/components/tools/CVMakerForm'
 import ToolsMenu from '@/components/tools/ToolsMenu'
+import { Config } from '@/config'
 
 export const metadata: Metadata = {
   title: 'CV Maker',
   description: 'Free online CV/Resume maker tool. Create professional CVs and resumes with drag-and-drop interface. Export to Markdown format. No registration required.',
   openGraph: {
-    title: 'CV Maker | Free Online Resume Builder | Sabiq Mame',
+    title: `CV Maker | Free Online Resume Builder | ${Config.me.alias}`,
     description: 'Free online CV/Resume maker tool. Create professional CVs and resumes with drag-and-drop interface.',
     url: '/tools/cv-maker',
   },

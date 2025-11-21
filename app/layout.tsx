@@ -6,41 +6,22 @@ import ThemeWrapper from '@/components/ThemeWrapper'
 import NextTopLoader from 'nextjs-toploader'
 import Navbar from '@/components/Navbar'
 import { Analytics } from '@vercel/analytics/next';
+import { Config } from '@/config'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sabiq.pro'),
+  metadataBase: new URL(Config.siteUrl),
   title: {
-    default: 'Sabiq Mame | Full-Stack Engineer',
-    template: '%s | Sabiq Mame'
+    default: `${Config.me.alias} | ${Config.work.title}`,
+    template: `%s | ${Config.me.alias}`
   },
-  description: 'Full-Stack Engineer with expertise in website and backend development. Specializing in building efficient, scalable, and well-structured systems. Currently working at PT. Quantum Teknologi Nusantara.',
-  keywords: ['Full-Stack Engineer', 'Web Developer', 'Backend Developer', 'Frontend Developer', 'React', 'Next.js', 'TypeScript', 'Node.js', 'Portfolio'],
-  authors: [{ name: 'Sabiq Mame' }],
-  creator: 'Sabiq Mame',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: '/',
-    siteName: 'Sabiq Mame',
-    title: 'Sabiq Mame | Full-Stack Engineer',
-    description: 'Full-Stack Engineer with expertise in website and backend development. Specializing in building efficient, scalable, and well-structured systems.',
-    images: [
-      {
-        url: '/me/me.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Sabiq Mame',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Sabiq Mame | Full-Stack Engineer',
-    description: 'Full-Stack Engineer with expertise in website and backend development.',
-    images: ['/me/me.jpg'],
-  },
+  description: Config.work.description,
+  keywords: Config.keywords,
+  authors: [{ name: Config.me.alias }],
+  creator: Config.me.alias,
+  openGraph: Config.openGraph,
+  twitter: Config.twitter,
   robots: {
     index: true,
     follow: true,
@@ -51,11 +32,6 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
-  verification: {
-    // Add your verification codes here if needed
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
   },
 }
 
@@ -68,7 +44,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/me/logo.svg" />
-        <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'https://sabiq.pro'} />
+        <link rel="canonical" href={Config.siteUrl} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#3b82f6" />
         <script

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
 import MarkdownPreview from '@/components/tools/MarkdownPreview'
 import ToolsMenu from '@/components/tools/ToolsMenu'
+import { Config } from '@/config'
 
 export const metadata: Metadata = {
   title: 'Markdown Preview',
   description: 'Free online Markdown preview tool. Write Markdown and see live preview with GitHub Flavored Markdown support. Perfect for writing documentation, README files, and more. No registration required.',
   openGraph: {
-    title: 'Markdown Preview | Live Markdown Editor | Sabiq Mame',
+    title: `Markdown Preview | Live Markdown Editor | ${Config.me.alias}`,
     description: 'Free online Markdown preview tool. Write Markdown and see live preview with GitHub Flavored Markdown support.',
     url: '/tools/markdown-preview',
   },

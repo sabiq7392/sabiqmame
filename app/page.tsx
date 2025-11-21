@@ -1,41 +1,28 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
 import HomeSection from '@/components/HomeSection'
+import { Config } from '@/config'
 
 export const metadata: Metadata = {
-  title: 'Sabiq Mame | Full-Stack Engineer',
-  description: 'Full-Stack Engineer portfolio showcasing skills, experience, projects, and tools. Specializing in React, Next.js, TypeScript, and backend development.',
-  openGraph: {
-    title: 'Sabiq Mame | Full-Stack Engineer Portfolio',
-    description: 'Full-Stack Engineer portfolio showcasing skills, experience, projects, and tools.',
-    url: '/',
-  },
+  title: `${Config.me.alias} | ${Config.work.title}`,
+  description: Config.work.description,
+  openGraph: Config.openGraph,
 }
 
 export default function Home() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Sabiq Mame',
-    jobTitle: 'Full-Stack Engineer',
-    description: 'Full-Stack Engineer with expertise in website and backend development. Specializing in building efficient, scalable, and well-structured systems.',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://sabiq.pro',
+    name: Config.me.alias,
+    jobTitle: Config.work.title,
+    description: Config.work.description,
+    url: Config.siteUrl,
     sameAs: [
-      'https://www.linkedin.com/in/sabiq-muhammad-6b314a210/',
-      'https://github.com/sabiq7392',
+      `https://${Config.socialMedia.linkedin}`,
+      `https://${Config.socialMedia.github}`,
     ],
-    email: 'sabiqmuhammad98@gmail.com',
-    knowsAbout: [
-      'Full-Stack Development',
-      'Web Development',
-      'Backend Development',
-      'Frontend Development',
-      'React',
-      'Next.js',
-      'TypeScript',
-      'Node.js',
-    ],
-  }
+    email: Config.socialMedia.email,
+    knowsAbout: Config.keywords,
+  };
 
   return (
     <>

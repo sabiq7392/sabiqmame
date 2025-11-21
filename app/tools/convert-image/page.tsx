@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
 import ImageConverter from '@/components/tools/ImageConverter'
 import ToolsMenu from '@/components/tools/ToolsMenu'
+import { Config } from '@/config'
 
 export const metadata: Metadata = {
   title: 'Image Converter',
   description: 'Free online image converter. Convert images between JPEG, PNG, WebP, GIF, and BMP formats. Adjust quality settings and download your converted images instantly. No registration required.',
   openGraph: {
-    title: 'Image Converter | Convert Images Online | Sabiq Mame',
+    title: `Image Converter | Convert Images Online | ${Config.me.alias}`,
     description: 'Free online image converter. Convert images between JPEG, PNG, WebP, GIF, and BMP formats.',
     url: '/tools/convert-image',
   },

@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { Config } from '@/config'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sabiqmame.com'
+  const baseUrl = Config.siteUrl
 
   return {
     rules: {
