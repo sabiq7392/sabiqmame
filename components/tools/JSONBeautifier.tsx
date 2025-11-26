@@ -6,6 +6,7 @@ import { ClearOutlined, CopyOutlined, UpOutlined, DownOutlined } from '@ant-desi
 import dynamic from 'next/dynamic'
 import { useTheme } from '@/contexts/ThemeContext'
 import { message } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
@@ -450,6 +451,7 @@ const parseJSONWithErrorInfo = (text: string): {
 
 export default function JSONBeautifier() {
   const { theme } = useTheme()
+  const { track } = useToolTracking('json-beautifier', 'JSON Beautifier', '/tools/json-beautifier')
   const [inputJson, setInputJson] = useState('')
   const [formattedJson, setFormattedJson] = useState('')
   const [parsedJson, setParsedJson] = useState<any>(null)
@@ -529,6 +531,11 @@ export default function JSONBeautifier() {
     setError(null)
     setErrorLine(null)
     setErrorColumn(null)
+
+    // Track tool usage on first interaction
+    if (value.trim()) {
+      track()
+    }
 
     // Clear previous timeout
     if (formatTimeoutRef.current) {

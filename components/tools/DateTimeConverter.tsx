@@ -5,6 +5,7 @@ import { Typography, Input, Button, Space, Select, DatePicker, Card, Divider, Al
 import { ClearOutlined, CopyOutlined, SwapOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
+import { useToolTracking } from '@/hooks/useToolTracking'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -57,6 +58,7 @@ const TIMEZONES = [
 ]
 
 export default function DateTimeConverter() {
+  const { track } = useToolTracking('datetime-converter', 'Date & Time Converter', '/tools/datetime-converter')
   const [conversionType, setConversionType] = useState<ConversionType>('format')
   const [inputDate, setInputDate] = useState<string>('')
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs())
@@ -362,7 +364,20 @@ export default function DateTimeConverter() {
               </Text>
               <TextArea
                 value={inputDate}
-                onChange={(e) => setInputDate(e.target.value)}
+                onChange={(e) => {
+                  setInputDate(e.target.value)
+                  // Track tool usage on input
+                  if (e.target.value.trim()) {
+                    track()
+                  }
+                }}
+                onPaste={(e) => {
+                  const pastedText = e.clipboardData.getData('text')
+                  // Track tool usage on paste
+                  if (pastedText.trim()) {
+                    track()
+                  }
+                }}
                 placeholder="Enter date string (e.g., 2024-01-15 10:30:00, 15/01/2024, Jan 15, 2024)"
                 rows={5}
                 className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white"
@@ -380,7 +395,20 @@ export default function DateTimeConverter() {
               </Text>
               <Input
                 value={timestamp}
-                onChange={(e) => setTimestamp(e.target.value)}
+                onChange={(e) => {
+                  setTimestamp(e.target.value)
+                  // Track tool usage on input
+                  if (e.target.value.trim()) {
+                    track()
+                  }
+                }}
+                onPaste={(e) => {
+                  const pastedText = e.clipboardData.getData('text')
+                  // Track tool usage on paste
+                  if (pastedText.trim()) {
+                    track()
+                  }
+                }}
                 placeholder="Enter timestamp (e.g., 1705312200)"
                 className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white"
               />
@@ -397,7 +425,20 @@ export default function DateTimeConverter() {
               </Text>
               <TextArea
                 value={inputDate}
-                onChange={(e) => setInputDate(e.target.value)}
+                onChange={(e) => {
+                  setInputDate(e.target.value)
+                  // Track tool usage on input
+                  if (e.target.value.trim()) {
+                    track()
+                  }
+                }}
+                onPaste={(e) => {
+                  const pastedText = e.clipboardData.getData('text')
+                  // Track tool usage on paste
+                  if (pastedText.trim()) {
+                    track()
+                  }
+                }}
                 placeholder={`Enter date (e.g., 2024-01-15 10:30:00). Will use your local timezone: ${dayjs.tz.guess()}`}
                 rows={5}
                 className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white"
@@ -416,7 +457,13 @@ export default function DateTimeConverter() {
                 </Text>
                 <DatePicker
                   value={selectedDate}
-                  onChange={setSelectedDate}
+                  onChange={(date) => {
+                    setSelectedDate(date)
+                    // Track tool usage on date change
+                    if (date) {
+                      track()
+                    }
+                  }}
                   showTime
                   format="YYYY-MM-DD HH:mm:ss"
                   className="w-full"
@@ -434,7 +481,11 @@ export default function DateTimeConverter() {
                     <Input
                       type="number"
                       value={calcYears}
-                      onChange={(e) => setCalcYears(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        setCalcYears(parseInt(e.target.value) || 0)
+                        // Track tool usage on calculator input
+                        track()
+                      }}
                       placeholder="0"
                       className="bg-white/60 dark:bg-white/5"
                     />
@@ -444,7 +495,11 @@ export default function DateTimeConverter() {
                     <Input
                       type="number"
                       value={calcMonths}
-                      onChange={(e) => setCalcMonths(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        setCalcMonths(parseInt(e.target.value) || 0)
+                        // Track tool usage on calculator input
+                        track()
+                      }}
                       placeholder="0"
                       className="bg-white/60 dark:bg-white/5"
                     />
@@ -454,7 +509,11 @@ export default function DateTimeConverter() {
                     <Input
                       type="number"
                       value={calcDays}
-                      onChange={(e) => setCalcDays(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        setCalcDays(parseInt(e.target.value) || 0)
+                        // Track tool usage on calculator input
+                        track()
+                      }}
                       placeholder="0"
                       className="bg-white/60 dark:bg-white/5"
                     />
@@ -464,7 +523,11 @@ export default function DateTimeConverter() {
                     <Input
                       type="number"
                       value={calcHours}
-                      onChange={(e) => setCalcHours(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        setCalcHours(parseInt(e.target.value) || 0)
+                        // Track tool usage on calculator input
+                        track()
+                      }}
                       placeholder="0"
                       className="bg-white/60 dark:bg-white/5"
                     />
@@ -474,7 +537,11 @@ export default function DateTimeConverter() {
                     <Input
                       type="number"
                       value={calcMinutes}
-                      onChange={(e) => setCalcMinutes(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        setCalcMinutes(parseInt(e.target.value) || 0)
+                        // Track tool usage on calculator input
+                        track()
+                      }}
                       placeholder="0"
                       className="bg-white/60 dark:bg-white/5"
                     />

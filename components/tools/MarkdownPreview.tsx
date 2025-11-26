@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useTheme } from '@/contexts/ThemeContext'
 import { message } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -53,6 +54,7 @@ function hello() {
 
 export default function MarkdownPreview() {
   const { theme } = useTheme()
+  const { track } = useToolTracking('markdown-preview', 'Markdown Preview', '/tools/markdown-preview')
   const [markdown, setMarkdown] = useState('')
   const [mounted, setMounted] = useState(false)
 
@@ -146,7 +148,21 @@ export default function MarkdownPreview() {
           </div>
           <TextArea
             value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value
+              setMarkdown(value)
+              // Track tool usage on input
+              if (value.trim()) {
+                track()
+              }
+            }}
+            onPaste={(e) => {
+              const pastedText = e.clipboardData.getData('text')
+              // Track tool usage on paste
+              if (pastedText.trim()) {
+                track()
+              }
+            }}
             placeholder="Write your Markdown here..."
             rows={25}
             className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"

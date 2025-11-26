@@ -5,6 +5,7 @@ import { Card, Typography, Upload, Button, Select, Slider, Space, Alert, Image }
 import { UploadOutlined, DownloadOutlined, ClearOutlined, InboxOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const { Title, Text } = Typography
 const { Option } = Select
@@ -18,6 +19,7 @@ const SUPPORTED_FORMATS = [
 ]
 
 export default function ImageConverter() {
+  const { track } = useToolTracking('convert-image', 'Convert Image', '/tools/convert-image')
   const [originalFile, setOriginalFile] = useState<File | null>(null)
   const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null)
   const [convertedImageUrl, setConvertedImageUrl] = useState<string | null>(null)
@@ -32,6 +34,9 @@ export default function ImageConverter() {
       message.error('Please upload an image file')
       return false
     }
+
+    // Track tool usage on image upload
+    track()
 
     setOriginalFile(file)
     const reader = new FileReader()

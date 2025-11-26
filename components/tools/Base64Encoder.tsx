@@ -5,6 +5,7 @@ import { Typography, Input, Button, Space, Radio, Alert, Image, Upload, Tabs } f
 import { ClearOutlined, CopyOutlined, SwapOutlined, DownloadOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -61,6 +62,7 @@ const getFileExtension = (mimeType: string): string => {
 }
 
 export default function Base64Encoder() {
+  const { track } = useToolTracking('base64-encoder', 'Base64 Encoder', '/tools/base64-encoder')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [mode, setMode] = useState<Mode>('encode')
@@ -233,9 +235,16 @@ export default function Base64Encoder() {
 
   const handleInputChange = (value: string) => {
     setInput(value)
+    // Track tool usage on input
+    if (value.trim()) {
+      track()
+    }
   }
 
   const handleFileUpload: UploadProps['beforeUpload'] = (file) => {
+    // Track tool usage on file upload
+    track()
+
     const reader = new FileReader()
 
     reader.onload = (e) => {
@@ -517,14 +526,21 @@ export default function Base64Encoder() {
                   <Text className="text-gray-900 dark:text-white text-sm font-medium mb-2 block">
                     Base64 Data URI:
                   </Text>
-                  <TextArea
-                    value={input}
-                    onChange={(e) => handleInputChange(e.target.value)}
-                    placeholder="Base64 data URI will appear here after file upload..."
-                    rows={8}
-                    className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
-                    style={{ resize: 'vertical' }}
-                  />
+                <TextArea
+                  value={input}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  onPaste={(e) => {
+                    const pastedText = e.clipboardData.getData('text')
+                    // Track tool usage on paste
+                    if (pastedText.trim()) {
+                      track()
+                    }
+                  }}
+                  placeholder="Base64 data URI will appear here after file upload..."
+                  rows={8}
+                  className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
+                  style={{ resize: 'vertical' }}
+                />
                   <div className="mt-2">
                     <Text className="text-gray-500 dark:text-white/40 text-xs">
                       Length: {input.length} characters
@@ -550,6 +566,13 @@ export default function Base64Encoder() {
                   <TextArea
                     value={input}
                     onChange={(e) => handleInputChange(e.target.value)}
+                    onPaste={(e) => {
+                      const pastedText = e.clipboardData.getData('text')
+                      // Track tool usage on paste
+                      if (pastedText.trim()) {
+                        track()
+                      }
+                    }}
                     placeholder="Enter Base64 image string (data:image/...;base64,...) or plain Base64..."
                     rows={8}
                     className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"
@@ -560,6 +583,13 @@ export default function Base64Encoder() {
                 <TextArea
                   value={input}
                   onChange={(e) => handleInputChange(e.target.value)}
+                  onPaste={(e) => {
+                    const pastedText = e.clipboardData.getData('text')
+                    // Track tool usage on paste
+                    if (pastedText.trim()) {
+                      track()
+                    }
+                  }}
                   placeholder={mode === 'encode' ? 'Enter text to encode or paste Base64 image (data:image/...;base64,...)...' : 'Enter Base64 string to decode or paste Base64 image...'}
                   rows={15}
                   className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"

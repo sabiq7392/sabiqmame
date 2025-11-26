@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Typography, Input, Button, Space, Alert } from 'antd'
 import { ClearOutlined, CopyOutlined, DownloadOutlined } from '@ant-design/icons'
 import { message } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -80,6 +81,7 @@ const jsonToCSV = (jsonData: any): string => {
 }
 
 export default function JSONToCSV() {
+  const { track } = useToolTracking('json-to-csv', 'JSON to CSV', '/tools/json-to-csv')
   const [inputJson, setInputJson] = useState('')
   const [csvOutput, setCsvOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -151,6 +153,10 @@ export default function JSONToCSV() {
 
   const handleJSONInput = (value: string) => {
     setInputJson(value)
+    // Track tool usage on input
+    if (value.trim()) {
+      track()
+    }
     convertJSON(value)
   }
 
@@ -232,6 +238,13 @@ export default function JSONToCSV() {
           <TextArea
             value={inputJson}
             onChange={(e) => handleJSONInput(e.target.value)}
+            onPaste={(e) => {
+              const pastedText = e.clipboardData.getData('text')
+              // Track tool usage on paste
+              if (pastedText.trim()) {
+                track()
+              }
+            }}
             placeholder="Paste your JSON array here..."
             rows={20}
             className="font-mono text-sm bg-white/60 dark:bg-white/5 border-gray-300 dark:border-white/20 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40"

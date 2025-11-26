@@ -5,6 +5,7 @@ import { Card, Typography, Input, Button, Space, Alert, Tabs } from 'antd'
 import { SwapOutlined, ClearOutlined, CopyOutlined } from '@ant-design/icons'
 import dynamic from 'next/dynamic'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
@@ -23,6 +24,7 @@ interface DiffResult {
 
 export default function JSONDiff() {
   const { theme } = useTheme()
+  const { track } = useToolTracking('json-diff', 'JSON Diff', '/tools/json-diff')
   const [json1, setJson1] = useState('')
   const [json2, setJson2] = useState('')
   const [diffResult, setDiffResult] = useState<DiffResult | null>(null)
@@ -125,6 +127,9 @@ export default function JSONDiff() {
       setError('Please provide both JSON objects to compare')
       return
     }
+
+    // Track tool usage on compare
+    track()
 
     try {
       const obj1 = parseJSON(json1)
@@ -391,6 +396,11 @@ export default function JSONDiff() {
   const handleJSONInput = (value: string, setter: (val: string) => void, timeoutRef: React.MutableRefObject<NodeJS.Timeout | null>) => {
     setter(value)
 
+    // Track tool usage on first input
+    if (value.trim()) {
+      track()
+    }
+
     // Clear previous timeout
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
@@ -414,6 +424,11 @@ export default function JSONDiff() {
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>, setter: (val: string) => void) => {
     const pastedText = e.clipboardData.getData('text')
+
+    // Track tool usage on paste
+    if (pastedText.trim()) {
+      track()
+    }
 
     const parsed = tryParseJSON(pastedText)
     if (parsed !== null) {

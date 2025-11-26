@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { Typography, Input, Button, Checkbox, Slider, Space, Card, Alert } from 'antd'
 import { CopyOutlined, ReloadOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { message } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const { Title, Text } = Typography
 
@@ -21,6 +22,7 @@ interface PasswordOptions {
 }
 
 export default function PasswordGenerator() {
+  const { track } = useToolTracking('password-generator', 'Password Generator', '/tools/password-generator')
   const [password, setPassword] = useState('')
   const [length, setLength] = useState(16)
   const [includeUppercase, setIncludeUppercase] = useState(true)
@@ -30,6 +32,7 @@ export default function PasswordGenerator() {
   const [copied, setCopied] = useState(false)
 
   const generatePassword = useCallback(() => {
+    track()
     let charset = ''
 
     if (includeUppercase) charset += UPPERCASE
@@ -50,7 +53,7 @@ export default function PasswordGenerator() {
 
     setPassword(generated)
     setCopied(false)
-  }, [length, includeUppercase, includeLowercase, includeNumbers, includeSymbols])
+  }, [length, includeUppercase, includeLowercase, includeNumbers, includeSymbols, track])
 
   // Generate password on mount and when options change
   useEffect(() => {
@@ -221,9 +224,9 @@ export default function PasswordGenerator() {
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                   <div
                     className={`h-2.5 rounded-full transition-all duration-300 ${strength.level === 'weak' ? 'bg-red-500' :
-                        strength.level === 'medium' ? 'bg-orange-500' :
-                          strength.level === 'strong' ? 'bg-blue-500' :
-                            'bg-green-500'
+                      strength.level === 'medium' ? 'bg-orange-500' :
+                        strength.level === 'strong' ? 'bg-blue-500' :
+                          'bg-green-500'
                       }`}
                     style={{
                       width: `${(strength.score / 10) * 100}%`,
@@ -241,8 +244,8 @@ export default function PasswordGenerator() {
               onClick={handleCopy}
               disabled={!password}
               className={`w-full ${copied
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-primary-blue hover:bg-primary-blue-dark'
+                ? 'bg-green-500 hover:bg-green-600'
+                : 'bg-primary-blue hover:bg-primary-blue-dark'
                 }`}
               size="large"
             >

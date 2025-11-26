@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { Typography, Input, Button, Space, Card, Select, InputNumber, Switch } from 'antd'
 import { CopyOutlined, ReloadOutlined, DeleteOutlined } from '@ant-design/icons'
 import { message } from 'antd'
+import { useToolTracking } from '@/hooks/useToolTracking'
 
 const { Title, Text } = Typography
 const { TextArea } = Input
@@ -12,26 +13,26 @@ const { TextArea } = Input
 const generateUUIDv1 = (): string => {
   // Get current time in milliseconds since Unix epoch
   const now = Date.now()
-  
+
   // Convert to 100-nanosecond intervals since 15 October 1582 (UUID epoch)
   // UUID epoch: 122192928000000000 (100-nanosecond intervals)
   // Unix epoch: 1970-01-01 00:00:00 UTC
   const uuidEpoch = 122192928000000000
   const timeIn100ns = (now * 10000) + uuidEpoch
-  
+
   // Extract time components (60 bits)
   const timeLow = (timeIn100ns & 0xffffffff).toString(16).padStart(8, '0')
   const timeMid = ((timeIn100ns >> 32) & 0xffff).toString(16).padStart(4, '0')
   const timeHighAndVersion = (((timeIn100ns >> 48) & 0x0fff) | 0x1000).toString(16).padStart(4, '0')
-  
+
   // Clock sequence (14 bits, with variant bits)
   const clockSeq = Math.floor(Math.random() * 0x3fff)
   const clockSeqHigh = ((clockSeq >> 8) | 0x80).toString(16).padStart(2, '0')
   const clockSeqLow = (clockSeq & 0xff).toString(16).padStart(2, '0')
-  
+
   // Node (48 bits - MAC address, using random for privacy)
   const node = Array.from({ length: 6 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join('')
-  
+
   return `${timeLow}-${timeMid}-${timeHighAndVersion}-${clockSeqHigh}${clockSeqLow}-${node}`
 }
 
@@ -55,11 +56,11 @@ const generateUUIDv5 = (namespace: string = '00000000-0000-0000-0000-00000000000
     hash = ((hash << 5) - hash) + char
     hash = hash & hash // Convert to 32bit integer
   }
-  
+
   // Convert hash to hex and format as UUID
   const hex = Math.abs(hash).toString(16).padStart(32, '0')
   const uuid = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-${((parseInt(hex[16], 16) & 0x3) | 0x8).toString(16)}${hex.slice(17, 20)}-${hex.slice(20, 32)}`
-  
+
   return uuid
 }
 
@@ -79,6 +80,7 @@ const generateUUID = (version: UUIDVersion = 'v4'): string => {
 }
 
 export default function UUIDGenerator() {
+  const { track } = useToolTracking('uuid-generator', 'UUID Generator', '/tools/uuid-generator')
   const [uuid, setUuid] = useState('')
   const [count, setCount] = useState(1)
   const [version, setVersion] = useState<UUIDVersion>('v4')
@@ -89,25 +91,27 @@ export default function UUIDGenerator() {
   const formatUUID = useCallback((uuid: string): string => {
     // Remove hyphens first to get clean hex string
     let cleanUUID = uuid.replace(/-/g, '')
-    
+
     // Add hyphens back if needed (format: 8-4-4-4-12)
     let formatted = cleanUUID
     if (withHyphens && cleanUUID.length === 32) {
       formatted = `${cleanUUID.slice(0, 8)}-${cleanUUID.slice(8, 12)}-${cleanUUID.slice(12, 16)}-${cleanUUID.slice(16, 20)}-${cleanUUID.slice(20)}`
     }
-    
+
     // Apply case formatting
     return format === 'uppercase' ? formatted.toUpperCase() : formatted.toLowerCase()
   }, [format, withHyphens])
 
   const generateSingleUUID = useCallback(() => {
+    track()
     const newUUID = generateUUID(version)
     const formatted = formatUUID(newUUID)
     setUuid(formatted)
     return formatted
-  }, [version, formatUUID])
+  }, [version, formatUUID, track])
 
   const generateMultipleUUIDs = useCallback(() => {
+    track()
     const uuids: string[] = []
     for (let i = 0; i < count; i++) {
       const newUUID = generateUUID(version)
@@ -117,7 +121,7 @@ export default function UUIDGenerator() {
     if (count === 1) {
       setUuid(uuids[0])
     }
-  }, [count, version, formatUUID])
+  }, [count, version, formatUUID, track])
 
   // Generate UUID on mount
   useEffect(() => {
