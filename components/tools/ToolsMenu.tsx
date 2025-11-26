@@ -12,7 +12,8 @@ import {
   TableOutlined,
   KeyOutlined,
   ClockCircleOutlined,
-  BgColorsOutlined
+  BgColorsOutlined,
+  BarcodeOutlined
 } from '@ant-design/icons'
 
 const { Text } = Typography
@@ -102,6 +103,13 @@ export const toolItems: Tool[] = [
     description: 'Pick colors, generate palettes, create gradients, and convert color formats',
     icon: <BgColorsOutlined />,
     href: '/tools/colors',
+  },
+  {
+    id: 'uuid-generator',
+    name: 'UUID Generator',
+    description: 'Generate random UUIDs (Universally Unique Identifiers) instantly',
+    icon: <BarcodeOutlined />,
+    href: '/tools/uuid-generator',
   }
 ]
 
