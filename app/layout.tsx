@@ -68,7 +68,7 @@ export default function RootLayout({
           <ThemeWrapper>
             <div className="min-h-screen w-full relative pt-24">
               <Navbar />
-              <main className="max-w-[1200px] mx-auto min-h-[calc(100vh-96px)] p-8 md:p-4">
+              <main className="max-w-[1500px] mx-auto min-h-[calc(100vh-96px)] p-8 md:p-4">
                 {children}
               </main>
             </div>

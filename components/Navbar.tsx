@@ -33,7 +33,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[1000] w-full px-4 md:px-6 pt-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1500px] mx-auto">
         <div className="glass-strong rounded-2xl px-6 py-3 shadow-[0_4px_20px_0_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_0_rgba(31,38,135,0.5)] backdrop-blur-[30px] border border-gray-200 dark:border-white/20 bg-white/90 dark:bg-white/10">
           <div className="flex items-center justify-between gap-3 md:gap-6">
             {/* Logo Section */}
