@@ -22,7 +22,7 @@ export async function GET(
 ) {
   try {
     const user = await UserModel.findById(params.id)
-    
+
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -47,7 +47,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json()
-    
+
     // Check if user exists
     const existingUser = await UserModel.findById(params.id)
     if (!existingUser) {
@@ -92,7 +92,7 @@ export async function DELETE(
 ) {
   try {
     const deleted = await UserModel.deleteById(params.id)
-    
+
     if (!deleted) {
       return NextResponse.json(
         { error: 'User not found' },

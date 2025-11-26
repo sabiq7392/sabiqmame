@@ -39,7 +39,7 @@ async function examples() {
   // Output: { id: '...', name: 'John Doe', email: 'john@example.com', age: 30, active: true, createdAt: '...', updatedAt: '...' }
 
   // ===== READ (Find) =====
-  
+
   // Find all users
   const allUsers = await UserModel.all()
   console.log('All users:', allUsers)
@@ -61,7 +61,7 @@ async function examples() {
   console.log('User by ID:', userById)
 
   // ===== UPDATE =====
-  
+
   // Update by query
   const updated = await UserModel.update(
     { email: 'john@example.com' },
@@ -76,7 +76,7 @@ async function examples() {
   console.log('Updated by ID:', updatedById)
 
   // ===== DELETE =====
-  
+
   // Delete by query
   const deletedCount = await UserModel.delete({ active: false })
   console.log('Deleted count:', deletedCount)
