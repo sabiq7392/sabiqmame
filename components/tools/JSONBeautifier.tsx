@@ -650,6 +650,76 @@ export default function JSONBeautifier() {
     }
   }
 
+  // Helper function to update JSON after edit/add/delete
+  const updateJsonFromReactJson = (updatedSrc: any) => {
+    try {
+      // Update parsed JSON
+      setParsedJson(updatedSrc)
+
+      // Format and update formatted JSON
+      const formatted = JSON.stringify(updatedSrc, null, 2)
+      setFormattedJson(formatted)
+
+      // Update input JSON to keep them in sync
+      setInputJson(formatted)
+
+      // Clear any errors
+      setError(null)
+      setErrorLine(null)
+      setErrorColumn(null)
+
+      // Show success message
+      message.success('JSON updated successfully!')
+
+      return true
+    } catch (e: any) {
+      message.error(`Failed to update JSON: ${e.message}`)
+      return false
+    }
+  }
+
+  // Handle edit in ReactJson
+  const handleEdit = (edit: any) => {
+    try {
+      // edit.updated_src contains the updated JSON object
+      if (edit.updated_src !== undefined) {
+        return updateJsonFromReactJson(edit.updated_src)
+      }
+      return false
+    } catch (e: any) {
+      message.error(`Failed to edit JSON: ${e.message}`)
+      return false
+    }
+  }
+
+  // Handle add in ReactJson
+  const handleAdd = (add: any) => {
+    try {
+      // add.updated_src contains the updated JSON object with new item
+      if (add.updated_src !== undefined) {
+        return updateJsonFromReactJson(add.updated_src)
+      }
+      return false
+    } catch (e: any) {
+      message.error(`Failed to add item: ${e.message}`)
+      return false
+    }
+  }
+
+  // Handle delete in ReactJson
+  const handleDelete = (del: any) => {
+    try {
+      // del.updated_src contains the updated JSON object without deleted item
+      if (del.updated_src !== undefined) {
+        return updateJsonFromReactJson(del.updated_src)
+      }
+      return false
+    } catch (e: any) {
+      message.error(`Failed to delete item: ${e.message}`)
+      return false
+    }
+  }
+
   return (
     <div className="max-w-[1400px] mx-auto">
       <div className="mb-8">
@@ -730,8 +800,14 @@ export default function JSONBeautifier() {
                     displayArrayKey={false}
                     displayObjectSize={false}
                     enableClipboard={true}
+                    enableEdit={true}
+                    enableAdd={true}
+                    enableDelete={true}
                     iconStyle="triangle"
                     indentWidth={2}
+                    onEdit={handleEdit}
+                    onAdd={handleAdd}
+                    onDelete={handleDelete}
                     name={null}
                     sortKeys={false}
                     style={{
