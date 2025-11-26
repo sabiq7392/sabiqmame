@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { Typography, Space, Button, Avatar, Tag } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Typography, Space, Button, Avatar, Tag, Badge } from 'antd'
 import {
   LinkedinOutlined,
   GithubOutlined,
@@ -15,6 +15,47 @@ const { Title, Paragraph } = Typography
 
 export default function HeroSection() {
   const { hero } = homeData
+  const [downloadCount, setDownloadCount] = useState<number>(0)
+
+  // Fetch download count on component mount
+  useEffect(() => {
+    const fetchDownloadCount = async () => {
+      try {
+        const response = await fetch('/api/track/cv-download/count')
+        const data = await response.json()
+        if (data.success && typeof data.count === 'number') {
+          setDownloadCount(data.count)
+        }
+      } catch (error) {
+        console.error('Failed to fetch download count:', error)
+      }
+    }
+
+    fetchDownloadCount()
+  }, [])
+
+  const handleDownloadCV = async () => {
+    try {
+      // Track the download
+      const response = await fetch('/api/track/cv-download', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      // Update counter after successful tracking
+      if (response.ok) {
+        setDownloadCount(prev => prev + 1)
+      }
+    } catch (error) {
+      // Silently fail tracking, don't block the download
+      console.error('Failed to track CV download:', error)
+    }
+
+    // Open CV URL in new tab
+    window.open(hero.cvUrl, '_blank')
+  }
 
   return (
     <section className="w-full flex justify-center py-8 md:py-4 fade-in">
@@ -38,17 +79,42 @@ export default function HeroSection() {
         </Paragraph>
 
         <Space size="large" className="mt-4 flex-col md:flex-row w-full md:w-auto">
-          <Button
-            type="primary"
-            size="large"
-            icon={<DownloadOutlined />}
-            className="h-12 px-8 w-full md:w-auto text-base font-medium bg-gradient-blue border-0 shadow-blue hover:-translate-y-0.5 hover:shadow-blue-hover transition-all"
-            onClick={() => {
-              window.open(hero.cvUrl, '_blank')
-            }}
-          >
-            Download CV
-          </Button>
+          <div className="relative inline-block">
+            <Badge
+              count={downloadCount}
+              overflowCount={9999}
+              showZero={false}
+              style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                zIndex: 10,
+              }}
+              styles={{
+                indicator: {
+                  backgroundColor: '#ef4444',
+                  boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+                  border: '2px solid white',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  minWidth: '24px',
+                  height: '24px',
+                  lineHeight: '20px',
+                  padding: '0 6px',
+                }
+              }}
+            >
+              <Button
+                type="primary"
+                size="large"
+                icon={<DownloadOutlined />}
+                className="h-12 px-8 w-full md:w-auto text-base font-medium bg-gradient-blue border-0 shadow-blue hover:-translate-y-0.5 hover:shadow-blue-hover transition-all relative"
+                onClick={handleDownloadCV}
+              >
+                Download CV
+              </Button>
+            </Badge>
+          </div>
           <Button
             size="large"
             icon={<MailOutlined />}
