@@ -86,8 +86,8 @@ export default function HeroSection() {
               showZero={false}
               style={{
                 position: 'absolute',
-                top: '-8px',
-                right: '-8px',
+                top: '0px',
+                right: '0px',
                 zIndex: 10,
               }}
               styles={{
@@ -95,7 +95,7 @@ export default function HeroSection() {
                   backgroundColor: '#ef4444',
                   boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
                   border: '2px solid white',
-                  fontSize: '12px',
+                  fontSize: '10px',
                   fontWeight: '600',
                   minWidth: '24px',
                   height: '24px',

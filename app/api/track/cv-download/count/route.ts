@@ -19,8 +19,8 @@ const CVDownloadTrackingModel = createModel<CVDownloadTracking>('cv-download-tra
 export async function GET(request: NextRequest) {
   try {
     const count = await CVDownloadTrackingModel.count()
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       count,
       success: true
     })

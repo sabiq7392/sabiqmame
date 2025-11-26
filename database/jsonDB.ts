@@ -14,7 +14,7 @@ const ensureDbDir = async () => {
 
 // Get file path for a model
 const getModelPath = (modelName: string): string => {
-  return join(DB_DIR, `${modelName}.json`)
+  return join(DB_DIR, `${modelName}.db.json`)
 }
 
 // Read data from JSON file

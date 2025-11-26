@@ -155,12 +155,12 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
 ## Lokasi File Database
 
-File JSON disimpan di: `database/db/{modelName}.json`
+File JSON disimpan di: `database/db/{modelName}.db.json`
 
 Contoh:
-- `database/db/users.json`
-- `database/db/posts.json`
-- `database/db/products.json`
+- `database/db/users.db.json`
+- `database/db/posts.db.json`
+- `database/db/products.db.json`
 
 ## Auto-Generated Fields
 
