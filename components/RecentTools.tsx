@@ -9,17 +9,43 @@ import { toolItems } from './tools/ToolsMenu'
 
 const { Title, Text } = Typography
 
+// Helper function to get relative time string
+const getRelativeTime = (timestamp: number, currentTime: number): string => {
+  const diff = currentTime - timestamp
+  const seconds = Math.floor(diff / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+
+  if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''} ago`
+  } else if (hours > 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`
+  } else if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
+  } else {
+    return 'Just now'
+  }
+}
+
 export default function RecentTools() {
   const [recentTools, setRecentTools] = useState<RecentTool[]>([])
+  const [currentTime, setCurrentTime] = useState(Date.now())
 
   useEffect(() => {
     const refreshTools = () => {
       const tools = getRecentTools()
       setRecentTools(tools)
+      setCurrentTime(Date.now()) // Update current time for relative time calculation
     }
 
     // Initial load
     refreshTools()
+
+    // Update current time every minute to refresh relative time display
+    const timeInterval = setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 60 * 1000) // Every minute
 
     // Refresh tools every 5 minutes to check for expired items
     const interval = setInterval(() => {
@@ -33,6 +59,7 @@ export default function RecentTools() {
     window.addEventListener('focus', handleFocus)
 
     return () => {
+      clearInterval(timeInterval)
       clearInterval(interval)
       window.removeEventListener('focus', handleFocus)
     }
@@ -71,14 +98,14 @@ export default function RecentTools() {
                   {tool.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <Title level={5} className="!m-0 !mb-1 text-gray-900 dark:text-white text-base font-semibold">
-                    {tool.name}
-                  </Title>
-                  {/* {tool.description && (
-                    <Text className="text-gray-600 dark:text-white/60 text-sm line-clamp-2">
-                      {tool.description}
-                    </Text> */}
-                  {/* )} */}
+                  <div className="flex items-center justify-between gap-2">
+                    <Title level={5} className="!m-0 text-gray-900 dark:text-white text-base font-semibold">
+                      {tool.name}
+                    </Title>
+                  </div>
+                  <Text className="text-gray-500 dark:text-white/50 text-xs mt-1 block">
+                    {getRelativeTime(tool.timestamp, currentTime)}
+                  </Text>
                 </div>
               </div>
             </div>
