@@ -1,4 +1,6 @@
 const STORAGE_KEY = 'recent-tools'
+const EXPIRY_DAYS = 3
+const EXPIRY_MS = EXPIRY_DAYS * 24 * 60 * 60 * 1000 // 3 days in milliseconds
 
 export interface RecentTool {
   id: string
@@ -7,12 +9,26 @@ export interface RecentTool {
   timestamp: number
 }
 
+// Helper function to check if a tool is expired
+const isExpired = (timestamp: number): boolean => {
+  const now = Date.now()
+  return (now - timestamp) > EXPIRY_MS
+}
+
+// Helper function to filter expired tools
+const filterExpiredTools = (tools: RecentTool[]): RecentTool[] => {
+  return tools.filter(tool => !isExpired(tool.timestamp))
+}
+
 export const trackToolUsage = (toolId: string, toolName: string, toolHref: string) => {
   if (typeof window === 'undefined') return
 
   try {
     const existing = localStorage.getItem(STORAGE_KEY)
     let recentTools: RecentTool[] = existing ? JSON.parse(existing) : []
+
+    // Remove expired tools first
+    recentTools = filterExpiredTools(recentTools)
 
     // Remove if already exists
     recentTools = recentTools.filter(tool => tool.id !== toolId)
@@ -43,7 +59,16 @@ export const getRecentTools = (): RecentTool[] => {
     const existing = localStorage.getItem(STORAGE_KEY)
     if (!existing) return []
 
-    const recentTools: RecentTool[] = JSON.parse(existing)
+    let recentTools: RecentTool[] = JSON.parse(existing)
+
+    // Filter expired tools
+    recentTools = filterExpiredTools(recentTools)
+
+    // Save back to localStorage if expired tools were removed
+    if (recentTools.length !== JSON.parse(existing).length) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(recentTools))
+    }
+
     return recentTools.sort((a, b) => b.timestamp - a.timestamp)
   } catch (e) {
     console.error('Failed to get recent tools:', e)

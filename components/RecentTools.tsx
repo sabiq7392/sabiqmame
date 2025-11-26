@@ -13,8 +13,29 @@ export default function RecentTools() {
   const [recentTools, setRecentTools] = useState<RecentTool[]>([])
 
   useEffect(() => {
-    const tools = getRecentTools()
-    setRecentTools(tools)
+    const refreshTools = () => {
+      const tools = getRecentTools()
+      setRecentTools(tools)
+    }
+
+    // Initial load
+    refreshTools()
+
+    // Refresh tools every 5 minutes to check for expired items
+    const interval = setInterval(() => {
+      refreshTools()
+    }, 5 * 60 * 1000) // 5 minutes
+
+    // Refresh when window gains focus (user comes back to tab)
+    const handleFocus = () => {
+      refreshTools()
+    }
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('focus', handleFocus)
+    }
   }, [])
 
   if (recentTools.length === 0) {
