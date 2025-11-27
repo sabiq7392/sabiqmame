@@ -15,7 +15,7 @@ export const Config = {
   socialMedia: {
     github: 'github.sabiq.pro',
     linkedin: 'linkedin.sabiq.pro',
-    email: 'sabiqmuhammad98@gmail.com',
+    email: 'me@sabiq.pro',
   },
   me,
   work,
