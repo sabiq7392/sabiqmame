@@ -41,7 +41,6 @@ export interface ExperienceRole {
   type?: string
   achievements: string[]
   skills: string[]
-  href?: string
 }
 
 export interface ExperienceData {
@@ -57,6 +56,7 @@ export interface ProjectData {
   image: string
   tags: string[]
   badge?: string
+  href?: string
 }
 
 export interface EducationData {
@@ -179,7 +179,6 @@ export const homeData: HomeData = {
             'Optimize report processing through background job execution and asynchronous task orchestration to reduce user wait time and increase system throughput.',
           ],
           skills: ['Back-End', 'Celery', 'RabbitMQ', 'LLM', 'Python', 'OCR'],
-          href: 'https://nexiusai.com',
         },
         {
           title: 'Tech Lead — BSMR (Badan Sertifikasi Manajemen Risiko)',
@@ -285,6 +284,7 @@ export const homeData: HomeData = {
         'AI-based assistant accounting platform that focuses on creating financial reports based on bank statements or Excel transaction data using OCR, RabbitMQ/Celery workflow orchestrations, and LLM-driven transaction classification.',
       image: '/projects/nexius.webp',
       tags: ['LLM', 'RabbitMQ', 'Celery', 'Python', 'OCR', 'Midtrans'],
+      href: 'https://nexiusai.com',
     },
     {
       title: 'BSMR',

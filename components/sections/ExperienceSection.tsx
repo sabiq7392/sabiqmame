@@ -7,7 +7,6 @@ import {
   EnvironmentOutlined,
   UpOutlined,
   DownOutlined,
-  ExportOutlined,
 } from '@ant-design/icons'
 import { homeData } from '@/data/home.data'
 
@@ -110,13 +109,7 @@ export default function ExperienceSection() {
 
                     <div
                       className="p-5 rounded-xl bg-white dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.08] hover:border-gray-200 dark:hover:border-white/[0.15] cursor-pointer transition-all"
-                      onClick={() => {
-                        if (role.href) {
-                          window.open(role.href, '_blank', 'noopener,noreferrer')
-                        } else {
-                          toggle(expIdx, roleIdx)
-                        }
-                      }}
+                      onClick={() => toggle(expIdx, roleIdx)}
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
@@ -148,13 +141,7 @@ export default function ExperienceSection() {
                           </div>
                         </div>
                         <span className="text-gray-400 dark:text-white/30 mt-1 flex-shrink-0">
-                          {role.href ? (
-                            <ExportOutlined className="text-primary-blue dark:text-primary-blue-light" />
-                          ) : isOpen ? (
-                            <UpOutlined />
-                          ) : (
-                            <DownOutlined />
-                          )}
+                          {isOpen ? <UpOutlined /> : <DownOutlined />}
                         </span>
                       </div>
 

@@ -24,7 +24,12 @@ export default function ProjectsSection() {
         {projects.map((project, index) => (
           <div
             key={index}
-            className="rounded-2xl bg-white dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.08] overflow-hidden hover:border-gray-200 dark:hover:border-white/[0.15] hover:-translate-y-1 transition-all flex flex-col"
+            className={`rounded-2xl bg-white dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.08] overflow-hidden hover:border-gray-200 dark:hover:border-white/[0.15] hover:-translate-y-1 transition-all flex flex-col ${project.href ? 'cursor-pointer' : ''}`}
+            onClick={() => {
+              if (project.href) {
+                window.open(project.href, '_blank', 'noopener,noreferrer')
+              }
+            }}
           >
             {/* Project Image */}
             <div className="relative w-full aspect-[16/10] bg-gray-50 dark:bg-white/[0.02] overflow-hidden">
