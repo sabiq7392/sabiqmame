@@ -4,23 +4,24 @@ const me = {
 };
 
 const work = {
-  title: 'Full-Stack Engineer',
-  description: 'Need a dev who can build a cool app, make the backend fly, and not panic when it’s time to deploy to cloud? Say less. I don’t promise perfect, but I promise done 😎',
+  title: 'Generalist Software Engineer',
+  description: 'Generalist Software Engineer with a strong track record of delivering MVPs, applications, and business-critical features under aggressive timelines. Adapting quickly to new challenges, from idea to production.',
   company: 'PT. Quantum Teknologi Nusantara',
   companyUrl: 'https://quantumteknologi.com',
 };
 
 export const Config = {
-  siteUrl: 'https://sabiq.pro',
+  siteUrl: 'https://sabiq.id',
   socialMedia: {
-    github: 'github.sabiq.pro',
-    linkedin: 'linkedin.sabiq.pro',
-    email: 'me@sabiq.pro',
+    github: 'https://github.com/sabiq7392',
+    linkedin: 'https://www.linkedin.com/in/sabiq-muhammad-6b314a210/',
+    email: 'sabiqmuhammad98@gmail.com',
   },
   me,
   work,
   keywords: [
-    'Full-Stack Engineer',
+    'Generalist Software Engineer',
+    'Software Engineer',
     'Web Developer',
     'Backend Developer',
     'Frontend Developer',
@@ -28,8 +29,12 @@ export const Config = {
     'Next.js',
     'TypeScript',
     'Node.js',
+    'Python',
+    'RabbitMQ',
+    'Celery',
+    'Docker',
     'Portfolio',
-    'Full-Stack Engineer Portfolio',
+    'Generalist Software Engineer Portfolio',
   ],
   openGraph: {
     type: 'website',

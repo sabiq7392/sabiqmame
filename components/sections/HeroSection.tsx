@@ -1,23 +1,22 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Typography, Space, Button, Avatar, Tag, Badge } from 'antd'
+import { Typography, Button, Avatar, Badge } from 'antd'
 import {
   LinkedinOutlined,
   GithubOutlined,
   MailOutlined,
   DownloadOutlined,
-  PhoneOutlined,
+  ArrowRightOutlined,
 } from '@ant-design/icons'
 import { homeData } from '@/data/home.data'
 
-const { Title, Paragraph } = Typography
+const { Title, Text, Paragraph } = Typography
 
 export default function HeroSection() {
   const { hero } = homeData
   const [downloadCount, setDownloadCount] = useState<number>(0)
 
-  // Fetch download count on component mount
   useEffect(() => {
     const fetchDownloadCount = async () => {
       try {
@@ -26,150 +25,141 @@ export default function HeroSection() {
         if (data.success && typeof data.count === 'number') {
           setDownloadCount(data.count)
         }
-      } catch (error) {
-        console.error('Failed to fetch download count:', error)
+      } catch {
+        // silently fail
       }
     }
-
     fetchDownloadCount()
   }, [])
 
   const handleDownloadCV = async () => {
     try {
-      // Track the download
       const response = await fetch('/api/track/cv-download', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       })
-
-      // Update counter after successful tracking
       if (response.ok) {
         setDownloadCount(prev => prev + 1)
       }
-    } catch (error) {
-      // Silently fail tracking, don't block the download
-      console.error('Failed to track CV download:', error)
+    } catch {
+      // silently fail
     }
-
-    // Open CV URL in new tab
     window.open(hero.cvUrl, '_blank')
   }
 
   return (
-    <section className="w-full flex justify-center py-8 md:py-4 fade-in">
-      <div className="w-full px-12 py-16 md:px-6 md:py-10 rounded-3xl text-center flex flex-col items-center gap-6 md:gap-4 glass-strong">
-        <Avatar
-          size={120}
-          className="border-[3px] border-primary-blue/50 dark:shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-          src={hero.avatar}
-        />
-        <Title
-          level={1}
-          className="!m-0 bg-gradient-text bg-clip-text text-transparent text-4xl md:text-3xl font-bold"
-        >
-          {hero.name}
-        </Title>
-        <Title level={3} className="!m-0 text-gray-700 dark:text-white/80 md:text-lg font-normal">
-          {hero.title}
-        </Title>
-        <Paragraph className="text-gray-600 dark:text-white/80 text-lg md:text-base leading-relaxed max-w-[600px] mx-auto !mb-0">
-          {hero.description}
-        </Paragraph>
+    <section className="w-full py-8 md:py-12 fade-in">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Left: Text Content */}
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <Text className="text-primary-blue dark:text-primary-blue-light text-sm font-semibold tracking-widest uppercase">
+              {hero.subtitle}
+            </Text>
+            <Title
+              level={1}
+              className="!m-0 text-gray-900 dark:text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+            >
+              {hero.name}
+            </Title>
+            <Title
+              level={2}
+              className="!m-0 text-gray-500 dark:text-white/60 text-xl md:text-2xl font-normal"
+            >
+              {hero.title}
+            </Title>
+          </div>
 
-        <Space size="large" className="mt-4 flex-col md:flex-row w-full md:w-auto">
-          <div className="relative inline-block">
+          <Paragraph className="text-gray-600 dark:text-white/70 text-base md:text-lg leading-relaxed !mb-0 max-w-[560px]">
+            {hero.description}
+          </Paragraph>
+
+          <div className="flex flex-wrap items-center gap-4 mt-2">
             <Badge
               count={downloadCount}
               overflowCount={9999}
               showZero={false}
-              style={{
-                position: 'absolute',
-                top: '0px',
-                right: '0px',
-                zIndex: 10,
-              }}
+              style={{ zIndex: 10 }}
               styles={{
                 indicator: {
                   backgroundColor: '#ef4444',
                   boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
                   border: '2px solid white',
                   fontSize: '10px',
-                  fontWeight: '600',
+                  fontWeight: 600,
                   minWidth: '24px',
                   height: '24px',
                   lineHeight: '20px',
                   padding: '0 6px',
-                }
+                },
               }}
             >
               <Button
                 type="primary"
                 size="large"
                 icon={<DownloadOutlined />}
-                className="h-12 px-8 w-full md:w-auto text-base font-medium bg-gradient-blue border-0 shadow-blue hover:-translate-y-0.5 hover:shadow-blue-hover transition-all relative"
+                className="h-12 px-8 text-base font-semibold bg-gray-900 dark:bg-white dark:text-gray-900 border-0 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 hover:-translate-y-0.5 transition-all shadow-lg shadow-gray-900/20 dark:shadow-white/10"
                 onClick={handleDownloadCV}
               >
                 Download CV
               </Button>
             </Badge>
+
+            <Button
+              size="large"
+              icon={<ArrowRightOutlined />}
+              className="h-12 px-8 text-base font-medium bg-transparent border-2 border-gray-300 dark:border-white/30 text-gray-700 dark:text-white/80 rounded-xl hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white hover:-translate-y-0.5 transition-all"
+              onClick={() => (window.location.href = hero.social.email)}
+            >
+              Contact Me
+            </Button>
           </div>
-          <Button
-            size="large"
-            icon={<MailOutlined />}
-            className="h-12 px-8 w-full md:w-auto text-base font-medium bg-transparent border-2 border-primary-blue/50 text-primary-blue-light hover:border-primary-blue hover:bg-primary-blue/10 hover:-translate-y-0.5 transition-all"
-            onClick={() => window.location.href = hero.social.email}
-          >
-            Contact Me
-          </Button>
-        </Space>
 
-        <Space size="large" className="mt-4">
-          <a
-            href={hero.social.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-2xl text-gray-600 dark:text-white/80 hover:text-primary-blue-light hover:scale-110 transition-all"
-            title="LinkedIn"
-          >
-            <LinkedinOutlined />
-          </a>
-          <a
-            href={hero.social.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-2xl text-gray-600 dark:text-white/80 hover:text-primary-blue-light hover:scale-110 transition-all"
-            title="GitHub"
-          >
-            <GithubOutlined />
-          </a>
-          <a
-            href={hero.social.email}
-            className="text-2xl text-gray-600 dark:text-white/80 hover:text-primary-blue-light hover:scale-110 transition-all"
-            title="Email"
-          >
-            <MailOutlined />
-          </a>
-          {/* <a
-            href={hero.social.phone}
-            className="text-2xl text-gray-600 dark:text-white/80 hover:text-primary-blue-light hover:scale-110 transition-all"
-            title="Phone"
-          >
-            <PhoneOutlined />
-          </a> */}
-        </Space>
+          {/* Social Links */}
+          <div className="flex items-center gap-6 mt-4 pt-6 border-t border-gray-200 dark:border-white/10">
+            <a
+              href={hero.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-gray-500 dark:text-white/50 hover:text-primary-blue dark:hover:text-primary-blue-light transition-colors text-sm font-medium"
+            >
+              <LinkedinOutlined className="text-lg" />
+              <span className="hidden sm:inline">LinkedIn</span>
+            </a>
+            <a
+              href={hero.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-gray-500 dark:text-white/50 hover:text-primary-blue dark:hover:text-primary-blue-light transition-colors text-sm font-medium"
+            >
+              <GithubOutlined className="text-lg" />
+              <span className="hidden sm:inline">GitHub</span>
+            </a>
+            <a
+              href={hero.social.email}
+              className="flex items-center gap-2 text-gray-500 dark:text-white/50 hover:text-primary-blue dark:hover:text-primary-blue-light transition-colors text-sm font-medium"
+            >
+              <MailOutlined className="text-lg" />
+              <span className="hidden sm:inline">Email</span>
+            </a>
+          </div>
+        </div>
 
-        {/* <div className="mt-4 flex flex-wrap gap-2 justify-center">
-          <Tag color="blue" className="text-sm px-3 py-1 border-primary-blue/50 bg-primary-blue/10 text-primary-blue-light">
-            <PhoneOutlined /> {hero.phone}
-          </Tag>
-          <Tag color="blue" className="text-sm px-3 py-1 border-primary-blue/50 bg-primary-blue/10 text-primary-blue-light">
-            <MailOutlined /> {hero.email}
-          </Tag>
-        </div> */}
+        {/* Right: Avatar */}
+        <div className="flex justify-center lg:justify-end">
+          <div className="relative">
+            {/* Decorative background shape */}
+            <div className="absolute inset-0 bg-gray-200 dark:bg-white/5 rounded-[40px] rotate-6 scale-95" />
+            <div className="absolute inset-0 bg-gray-100 dark:bg-white/5 rounded-[40px] -rotate-3 scale-95" />
+            <Avatar
+              size={320}
+              className="relative border-[4px] border-white dark:border-white/20 shadow-2xl rounded-[32px] md:!w-[320px] md:!h-[320px] max-sm:!w-[240px] max-sm:!h-[240px] max-sm:rounded-[24px]"
+              src={hero.avatar}
+              style={{ width: 320, height: 320 }}
+            />
+          </div>
+        </div>
       </div>
     </section>
   )
 }
-
