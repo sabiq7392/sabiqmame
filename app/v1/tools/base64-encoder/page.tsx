@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/v1/Navbar'
 import Base64Encoder from '@/components/tools/Base64Encoder'
 import ToolsMenu from '@/components/tools/ToolsMenu'
 import { Config } from '@/config'

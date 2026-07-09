@@ -1,27 +1,27 @@
 'use client'
 
 import { Button } from 'antd'
-import { HomeOutlined, ToolOutlined, SunOutlined, MoonOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { HomeOutlined, ToolOutlined, SunOutlined, MoonOutlined, AppstoreOutlined, ThunderboltOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from '@/contexts/ThemeContext'
 
 const menuItems = [
   {
-    key: '/',
-    href: '/',
+    key: '/v1',
+    href: '/v1',
     icon: HomeOutlined,
     label: 'Home',
   },
   {
-    key: '/tools',
-    href: '/tools',
+    key: '/v1/tools',
+    href: '/v1/tools',
     icon: ToolOutlined,
     label: 'My Tools',
   },
   {
-    key: '/gallery',
-    href: '/gallery',
+    key: '/v1/gallery',
+    href: '/v1/gallery',
     icon: AppstoreOutlined,
     label: 'Just Gallery',
   },

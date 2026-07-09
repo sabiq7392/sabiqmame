@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import HomeSection from '@/components/HomeSection'
+import HomeSection from '@/components/v1/HomeSection'
 import { Config } from '@/config'
+import V5Page from './v5/page';
 
 export const metadata: Metadata = {
   title: `${Config.me.alias} | ${Config.work.title}`,
@@ -30,7 +31,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomeSection />
+      <V5Page />
     </>
   )
 }

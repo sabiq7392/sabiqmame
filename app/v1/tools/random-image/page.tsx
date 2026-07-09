@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { RandomImageGallery } from '@/components/RandomImageGallery'
+import { RandomImageGallery } from '@/components/tools/RandomImageGallery'
 import ToolsMenu from '@/components/tools/ToolsMenu'
 import { Config } from '@/config'
 

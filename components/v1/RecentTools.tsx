@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Typography, Card } from 'antd'
 import { ClockCircleOutlined } from '@ant-design/icons'
 import { getRecentTools, RecentTool } from '@/utils/toolsTracking'
-import { toolItems } from './tools/ToolsMenu'
+import { toolItems } from '../tools/ToolsMenu'
 
 const { Title, Text } = Typography
 

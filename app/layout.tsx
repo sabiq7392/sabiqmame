@@ -4,7 +4,7 @@ import './globals.css'
 import StyledComponentsRegistry from '@/lib/AntdRegistry'
 import ThemeWrapper from '@/components/ThemeWrapper'
 import NextTopLoader from 'nextjs-toploader'
-import Navbar from '@/components/Navbar'
+import LayoutShell from '@/components/v1/LayoutShell'
 import { Analytics } from '@vercel/analytics/next';
 import { Config } from '@/config'
 
@@ -66,12 +66,7 @@ export default function RootLayout({
         <NextTopLoader />
         <StyledComponentsRegistry>
           <ThemeWrapper>
-            <div className="min-h-screen w-full relative pt-24">
-              <Navbar />
-              <main className="max-w-[1500px] mx-auto min-h-[calc(100vh-96px)] p-8 md:p-4">
-                {children}
-              </main>
-            </div>
+              {children}
           </ThemeWrapper>
         </StyledComponentsRegistry>
         <Analytics />

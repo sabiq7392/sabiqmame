@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
-import { MyGallery } from '@/components/MyGallery'
+import { MyGallery } from '@/components/tools/MyGallery'
 import { Config } from '@/config'
 
 export const metadata: Metadata = {
